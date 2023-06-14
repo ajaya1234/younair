@@ -105,7 +105,7 @@ function Header() {
           </button>{" "}
           &nbsp;&nbsp;
           <Link className="navbar-brand mr-1" to="/">
-            <img className="img-fluid" alt="" src="img/logo.png" />
+            <img style={{backgroundColor:'' , height:'59px' , width:'163px'}} className="img-fluid" alt="" src="img/logo.png" />
           </Link>
           <form className="d-none d-md-inline-block form-inline ml-auto mr-0 mr-md-5 my-2 my-md-0 osahan-navbar-search">
             <div className="input-group">
@@ -122,11 +122,43 @@ function Header() {
             </div>
           </form>
           <ul className="navbar-nav ml-auto ml-md-0 osahan-right-navbar">
-            <li className="nav-item mx-1">
+            {/* <li className="nav-item mx-1">
               <Link className="nav-link" to="/upload">
                 <i className="fas fa-plus-circle fa-fw" />
                 Upload Video
               </Link>
+            </li> */}
+
+
+
+<li className="nav-item dropdown no-arrow mx-1">
+              <Link
+                className="nav-link dropdown-toggle"
+                to="#"
+                id="alertsDropdown"
+                role="button"
+                data-toggle="dropdown"
+                aria-haspopup="true"
+                aria-expanded="false"
+              >
+                <i className="fas fa-plus-circle fa-fw" />
+
+              </Link>
+              <div
+                className="dropdown-menu dropdown-menu-right"
+                aria-labelledby="alertsDropdown"
+              >
+                <Link className="dropdown-item" to="#">
+                  <i className="fas fa-fw fa-edit " /> &nbsp; Go Live
+                </Link>
+                <Link className="dropdown-item" to="#">
+                  <i className="fas fa-fw fa-headphones-alt " /> &nbsp; Upload a video
+                </Link>
+                <div className="dropdown-divider" />
+                <Link className="dropdown-item" to="#">
+                  <i className="fas fa-fw fa-star " /> &nbsp; Upload a Music
+                </Link>
+              </div>
             </li>
             <li className="nav-item dropdown no-arrow mx-1">
               <Link
@@ -280,7 +312,7 @@ function Header() {
           </button>{" "}
           &nbsp;&nbsp;
           <Link className="navbar-brand mr-1" to="/">
-            <img className="img-fluid" alt="" src="img/logo.png" />
+            <img style={{background:'' , height:'59px' , width:'163px'}} className="img-fluid" alt="" src="img/logo.png" />
           </Link>
           <form className="d-none d-md-inline-block form-inline ml-auto mr-0 mr-md-5 my-2 my-md-0 osahan-navbar-search">
             <div className="input-group">
@@ -297,11 +329,34 @@ function Header() {
             </div>
           </form>
           <ul className="navbar-nav ml-auto ml-md-0 osahan-right-navbar">
-            <li className="nav-item mx-1">
-              <Link className="nav-link" to="/upload">
+          <li className="nav-item dropdown no-arrow mx-1">
+              <Link
+                className="nav-link dropdown-toggle"
+                to="#"
+                id="alertsDropdown"
+                role="button"
+                data-toggle="dropdown"
+                aria-haspopup="true"
+                aria-expanded="false"
+              >
                 <i className="fas fa-plus-circle fa-fw" />
-                Upload Video
+
               </Link>
+              <div
+                className="dropdown-menu dropdown-menu-right"
+                aria-labelledby="alertsDropdown"
+              >
+                <Link className="dropdown-item" to="#">
+                  <i className="fas fa-fw fa-edit " /> &nbsp; Go Live
+                </Link>
+                <Link className="dropdown-item" to="#">
+                  <i className="fas fa-fw fa-headphones-alt " /> &nbsp; Upload a video
+                </Link>
+                <div className="dropdown-divider" />
+                <Link className="dropdown-item" to="#">
+                  <i className="fas fa-fw fa-star " /> &nbsp; Upload a Music
+                </Link>
+              </div>
             </li>
             <li className="nav-item dropdown no-arrow mx-1">
               <Link

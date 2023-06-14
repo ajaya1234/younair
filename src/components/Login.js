@@ -3,6 +3,7 @@ import  axios  from 'axios';
 import { Link, useNavigate } from "react-router-dom";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import Header from './Header';
 
 
 
@@ -59,6 +60,7 @@ function Login() {
   };
   return (
     <>
+    <Header/>
     <div class="login-main-body">
     <section className="login-main-wrapper">
   <div className="container-fluid pl-0 pr-0">
@@ -66,9 +68,10 @@ function Login() {
       <div className="col-md-12 p-5 bg-white full-height">
         <div className="login-main-left">
           <div className="text-center mb-5 login-main-left-header pt-4">
-            <img src="img/favicon.png" className="img-fluid" alt="LOGO" />
+            <img src="img/logo.png" className="img-fluid" alt="LOGO" />
+            <h5 className="mt-3 mb-3">Welcome to Yuonair</h5>
             <h5 className="mt-3 mb-3">Login</h5>
-            
+             
           </div>
           <font style={{ "color": "blue" }}>{output}</font>
               <form onSubmit={handleSubmit} text="center">

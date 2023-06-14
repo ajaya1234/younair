@@ -1,6 +1,7 @@
+
 import { useState } from "react";
 import axios from "axios";
-
+import { useNavigate } from "react-router-dom";
 
 import { Link } from "react-router-dom";
 import Header from "./Header";
@@ -13,6 +14,8 @@ function Register() {
   const [password, setPassword] = useState("");
   const [confirm_password , setconfirm_password ]= useState("");
   const [gender , setGender]=useState('')
+
+  const navigate= useNavigate()
   const handleSubmit = async (evt) => {
     evt.preventDefault();
 
@@ -54,13 +57,24 @@ function Register() {
         "http://16.16.91.234:3003/api/signup",
         userDetails
       );
-      if (response.data.result === "true") {
+
+
+
+
+      
+      
+      
+
+      if (response.data.token !== "error") {
+        
         setOutput("User registered successfully.");
         setusername("");
         setEmail("");
         setPassword("");
         setconfirm_password("");
         setGender("");
+      
+      
       } else {
         setOutput(response.data.message);
       }
@@ -81,6 +95,7 @@ function Register() {
 
   return (
     <>
+    <Header/>
       <div class="login-main-body">
         <section className="login-main-wrapper">
           <div className="container-fluid pl-0 pr-0">
@@ -88,8 +103,8 @@ function Register() {
               <div className="col-md-12 p-5 bg-white full-height">
                 <div className="login-main-left">
                   <div className="text-center mb-5 login-main-left-header pt-4">
-                    <img src="img/favicon.png" className="img-fluid" alt="LOGO" />
-                    <h5 className="mt-3 mb-3">Welcome to Seven</h5>
+                    <img src="img/logo.png" className="img-fluid" alt="LOGO" />
+                    <h5 className="mt-3 mb-3">Welcome to Yuonair</h5>
                   </div>
                   {output && <font style={{ color: "blue" }}>{output}</font>}
               <form onSubmit={handleSubmit}>

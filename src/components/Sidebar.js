@@ -1,8 +1,10 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
 import {MdExplore} from 'react-icons/md'
-import {AiOutlineDownload} from 'react-icons/ai'
+import {BsFileMusicFill} from 'react-icons/bs'
 import {BsFillBookmarkStarFill} from 'react-icons/bs'
+import { BiHelpCircle } from 'react-icons/bi';
+
 function Sidebar() {
   return (
    <>
@@ -13,10 +15,10 @@ function Sidebar() {
         <span>Home</span>
       </Link>
     </li>
-    <li className="nav-item active">
-    <Link className="nav-link" to="/myvideo">
-    <AiOutlineDownload style={{ fontSize: "20px" }} />
-    <span>My Download</span>
+    <li className="nav-item ">
+    <Link className="nav-link" to="">
+    <BsFileMusicFill style={{ fontSize: "20px" }} />
+    <span>Music</span>
 </Link>
   </li>
     {/* <li className="nav-item">
@@ -95,13 +97,28 @@ function Sidebar() {
       </Link>
      
     </li>
-    <li className="nav-item dropdown">
+
+    <li className="nav-item">
+      <Link className="nav-link" to="/help">
+
+        <BiHelpCircle style={{ fontSize: "20px" }}/>
+        <span>Help</span>
+      </Link>
+    </li>
+    <li className="nav-item">
+      <Link className="nav-link" to="/about">
+        <i className="fas fa-fw fa-history" />
+        
+        <span>About</span>
+      </Link>
+    </li>
+    {/* <li className="nav-item dropdown">
     <Link to="/permium" className="nav-link">
     <BsFillBookmarkStarFill style={{fontSize:"20px"}}/>
       <span>Permium Videos</span>
     </Link>
    
-  </li>
+  </li> */}
     {/* <li className="nav-item channel-sidebar-list">
       <h6>SUBSCRIPTIONS</h6>
       <ul>

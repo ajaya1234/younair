@@ -37,7 +37,7 @@ const ForgotPassword = () => {
             <div className="col-md-12 p-5 bg-white full-height">
               <div className="login-main-left">
                 <div className="text-center mb-5 login-main-left-header pt-4">
-                  <img src="img/favicon.png" className="img-fluid" alt="LOGO" />
+                  <img src="img/logo.png" className="img-fluid" alt="LOGO" />
                   <h5 className="mt-3 mb-3">Reset Password</h5>
                   <p>
                     It is a long established fact that a reader <br /> will be

@@ -25,7 +25,7 @@ function Footer() {
                     <div className="row no-gutters">
                         <div className="col-lg-6 col-sm-6">
                             <p className="mt-1 mb-0">
-                                © Copyright 2020 <strong className="text-dark">Vidoe</strong>.
+                                © Copyright 2020 <strong className="text-dark">Yuonair</strong>.
                                 All Rights Reserved
                                 <br />
                                 <small className="mt-0 mb-0">

@@ -16,35 +16,252 @@ function Video_Page() {
 
   const [subscribeMsg, setSubscribeMsg] = useState("");
 
+  useEffect(() => {
+    createhistory();
+  }, []);
 
-  const subscribe = async () => {
-    const userId = localStorage.getItem("_id");
-    const channelId = localStorage.getItem("channelid");
+  const createhistory = async () => {
+    const idddd = localStorage.getItem("videoiid");
+    const useriddd = localStorage.getItem("_id");
+    const channeliddd = localStorage.getItem("channelid");
+
+    const options = {
+      headers: {
+        "content-type": "application/json; charset=utf-8",
+        "Access-Control-Allow-Origin": "*",
+      },
+    };
+
+    const data = JSON.stringify({
+      video_id: idddd,
+      user_id: useriddd,
+      channel_id: channeliddd,
+      
+    });
+
+    await axios
+      .post("http://16.16.91.234:3003/api/create_history", data, options)
+      .then((res) => {
+      console.log("responssssssssssss",res)  
+      })
+      .catch((err) => {
+        console.error("API Error:", err);
+      });
+  };
+
+
+
+  const addwishlist = async () => {
+    const userid = localStorage.getItem('_id');
+    const id = localStorage.getItem("channelid");
   
     const options = {
       headers: {
-        "Content-Type": "application/json; charset=utf-8",
+        "Content-Type": "application/json",
         "Access-Control-Allow-Origin": "*",
       },
     };
   
-    const data = JSON.stringify({
-      user_id: userId,
-      channel_id: channelId,
-    });
+    if (Array.isArray(lists) && lists.length > 0) {
+      const updatedLists = await Promise.all(lists.map(async (list) => {
+        if (list.status === "1") {
+          const data = JSON.stringify({
+            user_id: userid,
+            channel_id: id,
+            status: "0",
+          });
   
-    try {
-      const response = await axios.post("http://16.16.91.234:3003/api/subscribe_to_channel", data, options);
-      if (response.data.result === "true") {
-        setSubscribeMsg("Subscribed.");
-      } else {
-        setSubscribeMsg("Failed to subscribe to the channel.");
-      }
-    } catch (error) {
-      console.error("API Error:", error);
-      setSubscribeMsg("An error occurred while subscribing to the channel.");
+          try {
+            const response = await axios.post("http://16.16.91.234:3003/api/subscribe_to_channel", data, options);
+  
+            if (response.status === 200) {
+              return {
+                ...list,
+                status: "0",
+              };
+            }
+          } catch (error) {
+            console.error("Error unsubscribing from channel:", error);
+          }
+        } else {
+          const data = JSON.stringify({
+            user_id: userid,
+            channel_id: id,
+            status: "1",
+          });
+  
+          try {
+            const response = await axios.post("http://16.16.91.234:3003/api/subscribe_to_channel", data, options);
+  
+            if (response.status === 200) {
+              return {
+                ...list,
+                status: "1",
+              };
+            }
+          } catch (error) {
+            console.error("Error subscribing to channel:", error);
+          }
+        }
+  
+        return list;
+      }));
+  
+      setLists(updatedLists);
     }
   };
+  
+  
+
+
+
+
+
+
+
+  // const addwishlist = async () => {
+  //   const userid = localStorage.getItem('_id');
+  //   const id =  localStorage.getItem("channelid");
+
+  //   const options = {
+  //     headers: {
+  //       "Content-Type": "application/json",
+  //       "Access-Control-Allow-Origin": "*",
+  //     },
+  //   };
+
+  //   if (lists?.status === "1") {
+      
+  //     const data = JSON.stringify({
+  //       user_id: userid,
+  //       channel_id: id,
+  //       status: "0",
+  //     });
+
+  //     try {
+  //       const response = await axios.post("http://16.16.91.234:3003/api/subscribe_to_channel", data, options);
+
+  //       if (response.status === 200) {
+  //         setLists(prevLists => ({
+  //           ...prevLists,
+  //           status: "0"
+  //         }));
+          //addwishlist();
+          //alert("Channel UnSubscribed")
+         
+          
+//         }
+//       } catch (error) {
+        
+//       }
+//     } else {
+      
+//       const data = JSON.stringify({
+//         user_id: userid,
+//         channel_id: id,
+//         status: "1",
+//       });
+//       //alert("Channel Subscribed")
+//       try {
+//         const response = await axios.post("http://16.16.91.234:3003/api/subscribe_to_channel", data, options);
+
+//         if (response.status === 200) {
+//           setLists(prevLists => ({
+//             ...prevLists,
+//             status: "1"
+            
+//           }));
+//           //addwishlist();
+// }
+//       } catch (error) {
+//         console.error("Error adding product to wishlist:", error);
+//       }
+//     }
+//   };
+
+
+
+
+
+
+
+  // const subscribeToChannel = async () => {
+  //   const userId = localStorage.getItem("_id");
+  //   const channelId = localStorage.getItem("channelid");
+  
+  //   const options = {
+  //     headers: {
+  //       "Content-Type": "application/json; charset=utf-8",
+  //       "Access-Control-Allow-Origin": "*",
+  //     },
+  //   };
+  
+  //   const data = JSON.stringify({
+  //     user_id: userId,
+  //     channel_id: channelId,
+  //   });
+  
+  //   try {
+  //     const response = await axios.post(
+  //       "http://16.16.91.234:3003/api/subscribe_to_channel",
+  //       data,
+  //       options
+  //     );
+  //     if (response.data.result === "true") {
+  //       setSubscribeMsg("Subscribed.");
+  //       // Update the list of subscribed channels here if needed
+  //     } else {
+  //       setSubscribeMsg("Failed to subscribe to the channel.");
+  //     }
+  //   } catch (error) {
+  //     console.error("API Error:", error);
+  //     setSubscribeMsg("An error occurred while subscribing to the channel.");
+  //   }
+  // };
+  
+  // const getSubscribedChannels = async () => {
+   
+  // };
+  
+  // const handleSubscribeClick = async () => {
+  //   await subscribeToChannel();
+  //   await getSubscribedChannels();
+  // };
+  
+  
+
+
+
+
+
+  // const subscribe = async () => {
+  //   const userId = localStorage.getItem("_id");
+  //   const channelId = localStorage.getItem("channelid");
+  
+  //   const options = {
+  //     headers: {
+  //       "Content-Type": "application/json; charset=utf-8",
+  //       "Access-Control-Allow-Origin": "*",
+  //     },
+  //   };
+  
+  //   const data = JSON.stringify({
+  //     user_id: userId,
+  //     channel_id: channelId,
+  //   });
+  
+  //   try {
+  //     const response = await axios.post("http://16.16.91.234:3003/api/subscribe_to_channel", data, options);
+  //     if (response.data.result === "true") {
+  //       setSubscribeMsg("Subscribed.");
+  //     } else {
+  //       setSubscribeMsg("Failed to subscribe to the channel.");
+  //     }
+  //   } catch (error) {
+  //     console.error("API Error:", error);
+  //     setSubscribeMsg("An error occurred while subscribing to the channel.");
+  //   }
+  // };
 
 
 
@@ -85,7 +302,7 @@ function Video_Page() {
 
   const sendcomment = async () => {
     const idddd = localStorage.getItem("videoiid");
-    const useriddd = localStorage.getItem("useridd");
+    const useriddd = localStorage.getItem("_id");
     const channeliddd = localStorage.getItem("channelid");
 
     const options = {
@@ -242,10 +459,20 @@ function Video_Page() {
                         </div>
                         <div className="single-video-author box mb-3">
                           <div className="float-right">
-                            <button onClick={subscribe} className="btn btn-danger" type="button">
-                              Subscribe
-                              <strong>{subscribeMsg && <p>{subscribeMsg}</p>}10.4M</strong>
-                            </button>{" "}
+        
+
+<button
+    onClick={addwishlist}
+    className="btn btn-danger"
+    type="button"
+  >
+    Subscribe
+    <strong>{subscribeMsg && <p>{subscribeMsg}</p>}10.4M</strong>
+  </button>
+
+                           
+                           
+                            
                             <button
                               className="btn btn btn-outline-danger"
                               type="button"
@@ -253,7 +480,10 @@ function Video_Page() {
                               <i className="fas fa-bell" />
                             </button>
                           </div>
-                          <img className="img-fluid" src="img/s4.png" alt="" />
+                          <img className="img-fluid" src={
+                                  "http://16.16.91.234:3003/uploads/" +
+                                  list.video[1].filename
+                                } alt="" />
                           <p>
                             <Link to="#">
                               <strong>{list.channel_name}</strong>

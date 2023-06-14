@@ -45,7 +45,8 @@ const Myprofile = () => {
         options
       );
 
-      if (response.data.data && response.data.data.length > 0) {
+      if (response.data.data && response.data.data.length > 0) 
+      {
         setLists(response.data.data);
       }
     } catch (err) {
@@ -62,6 +63,7 @@ const Myprofile = () => {
 
   const get_subscribe = async () => {
     const userid = localStorage.getItem("_id");
+    console.log("usertdddd",userid)
 
     const options = {
       headers: {
@@ -81,7 +83,8 @@ const Myprofile = () => {
         options
       );
 
-      if (response.data.data && response.data.data.length > 0) {
+      if (response.data.data && response.data.data.length > 0)
+       {
         setListss(response.data.data);
         console.log("response checkinggg",response.data.data)
       }
@@ -730,15 +733,14 @@ const Myprofile = () => {
                               <div className="time">3:50</div>
                             </div>
                             <div className="video-card-body">
-                              <div className="video-title">
-                                <a href="video-page.html">There are many variations of passages of
-                                  Lorem</a>
-                              </div>
+                              {/* <div className="video-title">
+                                <a href="video-page.html">{list.data[0].description}</a>
+                              </div> */}
                               <div className="single-video-author box mb-3" style={{ paddingLeft: 0, paddingRight: 0 }}>
-                                <div className="float-right">
+                                {/* <div className="float-right">
                                   <p><i className="fas fa-eye" /> 10.4M</p>
-                                  <p><i className="fa fa-thumbs-up" /> {list.data[0].channel_name}K</p>
-                                </div>
+                                  <p><i className="fa fa-thumbs-up" /> {list.data[0].video_likes}K</p>
+                                </div> */}
                                 <a href="viewprofile.html"> <img className="img-fluid" src="img/s4.png" alt /></a>
                                 <p><a href="viewprofile.html"><strong>{list.data[0].channel_name}</strong></a> <span title data-placement="top" data-toggle="tooltip" data-original-title="Verified"><i className="fas fa-check-circle text-success" /></span></p>
                                 <p>3 Months ago</p>

@@ -2,8 +2,102 @@ import React from 'react'
 import Sidebar from './Sidebar'
 import { Link } from 'react-router-dom'
 import Header from './Header'
+import { useEffect } from 'react'
+import { useState } from 'react'
+import axios from 'axios'
+
+
 
 function History_Page() {
+
+  const [getcommt, setgetcomment] = useState([]);
+
+  useEffect(() => {
+    gethistory();
+  }, []);
+
+  const gethistory = async () => {
+    const idddd = localStorage.getItem("_id");
+
+    const options = {
+      headers: {
+        "content-type": "application/json; charset=utf-8",
+        "Access-Control-Allow-Origin": "*",
+      },
+    };
+
+    const data = JSON.stringify({
+      user_id: idddd,
+    });
+
+    await axios
+      .post("http://16.16.91.234:3003/api/get_history", data, options)
+      .then((res) => {
+        setgetcomment(res.data.data);
+        
+      })
+      .catch((err) => {
+        console.error("API Error:", err);
+      });
+  };
+
+
+  const removeCartitem = (item) => {
+    const idddd = localStorage.getItem("_id");
+    const options = {
+      headers: {
+        "content-type": "application/json; charset=utf-8",
+        "Access-Control-Allow-Origin": "*",
+      },
+    };
+  
+    const data = JSON.stringify({
+      user_id: idddd,
+      video_id: item,
+    });
+  
+    axios
+      .post("http://16.16.91.234:3003/api/delete_history", data, options)
+      .then((res) => {
+        console.log("response delete api", res);
+        removeCartitem();
+      })
+      .catch((err) => {
+        console.error(err);
+      });
+  };
+
+
+
+  // const removeCartitem = (item) => {
+  //       const idddd = localStorage.getItem("_id");
+  //   const options = {
+  //     headers: {
+  //       "content-type": "application/json; charset=utf-8",
+  //       "Access-Control-Allow-Origin": "*",
+  //     },
+  //   };
+
+  //   const data = JSON.stringify({
+  //     user_id : idddd ,
+  //     video_id: item,
+  //   });
+
+  //   axios
+  //     .post("http://16.16.91.234:3003/api/delete_history", data, options)
+  //     .then((res) => {
+  //       console.log("response delete api  aaaaaa dataaaa",res)
+  //       // setgetcomment();
+  //     })
+    
+  //     .catch((err) => {
+  //       console.error(err);
+  //     });
+  // };
+
+
+
+
 
   return (
   <>
@@ -42,18 +136,26 @@ function History_Page() {
               <h6>Watch History</h6>
             </div>
           </div>
-          <div className="col-xl-3 col-sm-6 mb-3">
+          {getcommt.map((list) => {
+                          return (
+          <div className="col-lg-4 col-sm-6 mb-3">
             <div className="video-card history-video">
-              <div className="video-card-image">
+              <div className="video-card-image" style={{ borderRadius: '10px', height: '200px' }}>
                 <Link className="video-close" to="#"  style={{zIndex:"0"}}>
-                  <i className="fas fa-times-circle"/>
+                <button>
+  <i onClick={() => removeCartitem(list.video_id)} className="fas fa-times-circle" />
+</button>
+
+                  {/* <button><i onClick={() => removeCartitem(list.video_id)} className="fas fa-times-circle"/></button> */}
                 </Link>
                 <Link className="play-icon" to="#">
                   <i className="fas fa-play-circle" />
                 </Link>
                 <Link to="#">
-                  <img className="img-fluid" src="img/v1.png" alt="" />
+                  <img className="img-fluid" src={"http://16.16.91.234:3003/uploads/" + list.data[0].video[1].filename} alt="" />
                 </Link>
+
+                {/* src = "http://16.16.91.234:3003/uploads/" + response["data"][0]["data"][0]["video"][1]["filename"] */}
                 <div className="time">3:50</div>
               </div>
               <div className="progress">
@@ -65,15 +167,15 @@ function History_Page() {
                   aria-valuemin={0}
                   aria-valuemax={100}
                 >
-                  1:40
+                  1:50
                 </div>
               </div>
               <div className="video-card-body">
                 <div className="video-title">
-                  <Link to="#">There are many variations of passages of Lorem</Link>
+                  <Link to="#">{list.data[0].description}</Link>
                 </div>
                 <div className="video-page text-success">
-                  Education{" "}
+                {list.data[0].channel_name}{" "}
                   <Link
                     title=""
                     data-placement="top"
@@ -85,552 +187,15 @@ function History_Page() {
                   </Link>
                 </div>
                 <div className="video-view">
-                  1.8M views &nbsp;
+                {list.data[0].video_views} views &nbsp;
                   <i className="fas fa-calendar-alt" /> 11 Months ago
                 </div>
               </div>
             </div>
           </div>
-          <div className="col-xl-3 col-sm-6 mb-3">
-            <div className="video-card history-video">
-              <div className="video-card-image">
-                <Link className="video-close" to="#">
-                  <i className="fas fa-times-circle" />
-                </Link>
-                <Link className="play-icon" to="#">
-                  <i className="fas fa-play-circle" />
-                </Link>
-                <Link to="#">
-                  <img className="img-fluid" src="img/v2.png" alt="" />
-                </Link>
-                <div className="time">3:50</div>
-              </div>
-              <div className="progress">
-                <div
-                  className="progress-bar"
-                  role="progressbar"
-                  style={{ width: "50%" }}
-                  aria-valuenow={50}
-                  aria-valuemin={0}
-                  aria-valuemax={100}
-                >
-                  1:40
-                </div>
-              </div>
-              <div className="video-card-body">
-                <div className="video-title">
-                  <Link to="#">There are many variations of passages of Lorem</Link>
-                </div>
-                <div className="video-page text-success">
-                  Education{" "}
-                  <Link
-                    title=""
-                    data-placement="top"
-                    data-toggle="tooltip"
-                    to="#"
-                    data-original-title="Verified"
-                  >
-                    <i className="fas fa-check-circle text-success" />
-                  </Link>
-                </div>
-                <div className="video-view">
-                  1.8M views &nbsp;
-                  <i className="fas fa-calendar-alt" /> 11 Months ago
-                </div>
-              </div>
-            </div>
+           );
+          })}
           </div>
-          <div className="col-xl-3 col-sm-6 mb-3">
-            <div className="video-card history-video">
-              <div className="video-card-image">
-                <Link className="video-close" to="#">
-                  <i className="fas fa-times-circle" />
-                </Link>
-                <Link className="play-icon" to="#">
-                  <i className="fas fa-play-circle" />
-                </Link>
-                <Link to="#">
-                  <img className="img-fluid" src="img/v3.png" alt="" />
-                </Link>
-                <div className="time">3:50</div>
-              </div>
-              <div className="progress">
-                <div
-                  className="progress-bar"
-                  role="progressbar"
-                  style={{ width: "50%" }}
-                  aria-valuenow={50}
-                  aria-valuemin={0}
-                  aria-valuemax={100}
-                >
-                  1:40
-                </div>
-              </div>
-              <div className="video-card-body">
-                <div className="video-title">
-                  <Link to="#">There are many variations of passages of Lorem</Link>
-                </div>
-                <div className="video-page text-danger">
-                  Education{" "}
-                  <Link
-                    title=""
-                    data-placement="top"
-                    data-toggle="tooltip"
-                    to="#"
-                    data-original-title="Unverified"
-                  >
-                    <i className="fas fa-frown text-danger" />
-                  </Link>
-                </div>
-                <div className="video-view">
-                  1.8M views &nbsp;
-                  <i className="fas fa-calendar-alt" /> 11 Months ago
-                </div>
-              </div>
-            </div>
-          </div>
-          <div className="col-xl-3 col-sm-6 mb-3">
-            <div className="video-card history-video">
-              <div className="video-card-image">
-                <Link className="video-close" to="#">
-                  <i className="fas fa-times-circle" />
-                </Link>
-                <Link className="play-icon" to="#">
-                  <i className="fas fa-play-circle" />
-                </Link>
-                <Link to="#">
-                  <img className="img-fluid" src="img/v4.png" alt="" />
-                </Link>
-                <div className="time">3:50</div>
-              </div>
-              <div className="progress">
-                <div
-                  className="progress-bar"
-                  role="progressbar"
-                  style={{ width: "50%" }}
-                  aria-valuenow={50}
-                  aria-valuemin={0}
-                  aria-valuemax={100}
-                >
-                  1:40
-                </div>
-              </div>
-              <div className="video-card-body">
-                <div className="video-title">
-                  <Link to="#">There are many variations of passages of Lorem</Link>
-                </div>
-                <div className="video-page text-success">
-                  Education{" "}
-                  <Link
-                    title=""
-                    data-placement="top"
-                    data-toggle="tooltip"
-                    to="#"
-                    data-original-title="Verified"
-                  >
-                    <i className="fas fa-check-circle text-success" />
-                  </Link>
-                </div>
-                <div className="video-view">
-                  1.8M views &nbsp;
-                  <i className="fas fa-calendar-alt" /> 11 Months ago
-                </div>
-              </div>
-            </div>
-          </div>
-          <div className="col-xl-3 col-sm-6 mb-3">
-            <div className="video-card history-video">
-              <div className="video-card-image">
-                <Link className="video-close" to="#">
-                  <i className="fas fa-times-circle" />
-                </Link>
-                <Link className="play-icon" to="#">
-                  <i className="fas fa-play-circle" />
-                </Link>
-                <Link to="#">
-                  <img className="img-fluid" src="img/v5.png" alt="" />
-                </Link>
-                <div className="time">3:50</div>
-              </div>
-              <div className="progress">
-                <div
-                  className="progress-bar"
-                  role="progressbar"
-                  style={{ width: "50%" }}
-                  aria-valuenow={50}
-                  aria-valuemin={0}
-                  aria-valuemax={100}
-                >
-                  1:40
-                </div>
-              </div>
-              <div className="video-card-body">
-                <div className="video-title">
-                  <Link to="#">There are many variations of passages of Lorem</Link>
-                </div>
-                <div className="video-page text-success">
-                  Education{" "}
-                  <Link
-                    title=""
-                    data-placement="top"
-                    data-toggle="tooltip"
-                    to="#"
-                    data-original-title="Verified"
-                  >
-                    <i className="fas fa-check-circle text-success" />
-                  </Link>
-                </div>
-                <div className="video-view">
-                  1.8M views &nbsp;
-                  <i className="fas fa-calendar-alt" /> 11 Months ago
-                </div>
-              </div>
-            </div>
-          </div>
-          <div className="col-xl-3 col-sm-6 mb-3">
-            <div className="video-card history-video">
-              <div className="video-card-image">
-                <Link className="video-close" to="#">
-                  <i className="fas fa-times-circle" />
-                </Link>
-                <Link className="play-icon" to="#">
-                  <i className="fas fa-play-circle" />
-                </Link>
-                <Link to="#">
-                  <img className="img-fluid" src="img/v6.png" alt="" />
-                </Link>
-                <div className="time">3:50</div>
-              </div>
-              <div className="progress">
-                <div
-                  className="progress-bar"
-                  role="progressbar"
-                  style={{ width: "50%" }}
-                  aria-valuenow={50}
-                  aria-valuemin={0}
-                  aria-valuemax={100}
-                >
-                  1:40
-                </div>
-              </div>
-              <div className="video-card-body">
-                <div className="video-title">
-                  <Link to="#">There are many variations of passages of Lorem</Link>
-                </div>
-                <div className="video-page text-danger">
-                  Education{" "}
-                  <Link
-                    title=""
-                    data-placement="top"
-                    data-toggle="tooltip"
-                    to="#"
-                    data-original-title="Unverified"
-                  >
-                    <i className="fas fa-frown text-danger" />
-                  </Link>
-                </div>
-                <div className="video-view">
-                  1.8M views &nbsp;
-                  <i className="fas fa-calendar-alt" /> 11 Months ago
-                </div>
-              </div>
-            </div>
-          </div>
-          <div className="col-xl-3 col-sm-6 mb-3">
-            <div className="video-card history-video">
-              <div className="video-card-image">
-                <Link className="video-close" to="#">
-                  <i className="fas fa-times-circle" />
-                </Link>
-                <Link className="play-icon" to="#">
-                  <i className="fas fa-play-circle" />
-                </Link>
-                <Link to="#">
-                  <img className="img-fluid" src="img/v7.png" alt="" />
-                </Link>
-                <div className="time">3:50</div>
-              </div>
-              <div className="progress">
-                <div
-                  className="progress-bar"
-                  role="progressbar"
-                  style={{ width: "50%" }}
-                  aria-valuenow={50}
-                  aria-valuemin={0}
-                  aria-valuemax={100}
-                >
-                  1:40
-                </div>
-              </div>
-              <div className="video-card-body">
-                <div className="video-title">
-                  <Link to="#">There are many variations of passages of Lorem</Link>
-                </div>
-                <div className="video-page text-success">
-                  Education{" "}
-                  <Link
-                    title=""
-                    data-placement="top"
-                    data-toggle="tooltip"
-                    to="#"
-                    data-original-title="Verified"
-                  >
-                    <i className="fas fa-check-circle text-success" />
-                  </Link>
-                </div>
-                <div className="video-view">
-                  1.8M views &nbsp;
-                  <i className="fas fa-calendar-alt" /> 11 Months ago
-                </div>
-              </div>
-            </div>
-          </div>
-          <div className="col-xl-3 col-sm-6 mb-3">
-            <div className="video-card history-video">
-              <div className="video-card-image">
-                <Link className="video-close" to="#">
-                  <i className="fas fa-times-circle" />
-                </Link>
-                <Link className="play-icon" to="#">
-                  <i className="fas fa-play-circle" />
-                </Link>
-                <Link to="#">
-                  <img className="img-fluid" src="img/v8.png" alt="" />
-                </Link>
-                <div className="time">3:50</div>
-              </div>
-              <div className="progress">
-                <div
-                  className="progress-bar"
-                  role="progressbar"
-                  style={{ width: "50%" }}
-                  aria-valuenow={50}
-                  aria-valuemin={0}
-                  aria-valuemax={100}
-                >
-                  1:40
-                </div>
-              </div>
-              <div className="video-card-body">
-                <div className="video-title">
-                  <Link to="#">There are many variations of passages of Lorem</Link>
-                </div>
-                <div className="video-page text-success">
-                  Education{" "}
-                  <Link
-                    title=""
-                    data-placement="top"
-                    data-toggle="tooltip"
-                    to="#"
-                    data-original-title="Verified"
-                  >
-                    <i className="fas fa-check-circle text-success" />
-                  </Link>
-                </div>
-                <div className="video-view">
-                  1.8M views &nbsp;
-                  <i className="fas fa-calendar-alt" /> 11 Months ago
-                </div>
-              </div>
-            </div>
-          </div>
-          <div className="col-xl-3 col-sm-6 mb-3">
-            <div className="video-card history-video">
-              <div className="video-card-image">
-                <Link className="video-close" to="#">
-                  <i className="fas fa-times-circle" />
-                </Link>
-                <Link className="play-icon" to="#">
-                  <i className="fas fa-play-circle" />
-                </Link>
-                <Link to="#">
-                  <img className="img-fluid" src="img/v2.png" alt="" />
-                </Link>
-                <div className="time">3:50</div>
-              </div>
-              <div className="progress">
-                <div
-                  className="progress-bar"
-                  role="progressbar"
-                  style={{ width: "50%" }}
-                  aria-valuenow={50}
-                  aria-valuemin={0}
-                  aria-valuemax={100}
-                >
-                  1:40
-                </div>
-              </div>
-              <div className="video-card-body">
-                <div className="video-title">
-                  <Link to="#">There are many variations of passages of Lorem</Link>
-                </div>
-                <div className="video-page text-success">
-                  Education{" "}
-                  <Link
-                    title=""
-                    data-placement="top"
-                    data-toggle="tooltip"
-                    to="#"
-                    data-original-title="Verified"
-                  >
-                    <i className="fas fa-check-circle text-success" />
-                  </Link>
-                </div>
-                <div className="video-view">
-                  1.8M views &nbsp;
-                  <i className="fas fa-calendar-alt" /> 11 Months ago
-                </div>
-              </div>
-            </div>
-          </div>
-          <div className="col-xl-3 col-sm-6 mb-3">
-            <div className="video-card history-video">
-              <div className="video-card-image">
-                <Link className="video-close" to="#">
-                  <i className="fas fa-times-circle" />
-                </Link>
-                <Link className="play-icon" to="#">
-                  <i className="fas fa-play-circle" />
-                </Link>
-                <Link to="#">
-                  <img className="img-fluid" src="img/v3.png" alt="" />
-                </Link>
-                <div className="time">3:50</div>
-              </div>
-              <div className="progress">
-                <div
-                  className="progress-bar"
-                  role="progressbar"
-                  style={{ width: "50%" }}
-                  aria-valuenow={50}
-                  aria-valuemin={0}
-                  aria-valuemax={100}
-                >
-                  1:40
-                </div>
-              </div>
-              <div className="video-card-body">
-                <div className="video-title">
-                  <Link to="#">There are many variations of passages of Lorem</Link>
-                </div>
-                <div className="video-page text-danger">
-                  Education{" "}
-                  <Link
-                    title=""
-                    data-placement="top"
-                    data-toggle="tooltip"
-                    to="#"
-                    data-original-title="Unverified"
-                  >
-                    <i className="fas fa-frown text-danger" />
-                  </Link>
-                </div>
-                <div className="video-view">
-                  1.8M views &nbsp;
-                  <i className="fas fa-calendar-alt" /> 11 Months ago
-                </div>
-              </div>
-            </div>
-          </div>
-          <div className="col-xl-3 col-sm-6 mb-3">
-            <div className="video-card history-video">
-              <div className="video-card-image">
-                <Link className="video-close" to="#">
-                  <i className="fas fa-times-circle" />
-                </Link>
-                <Link className="play-icon" to="#">
-                  <i className="fas fa-play-circle" />
-                </Link>
-                <Link to="#">
-                  <img className="img-fluid" src="img/v4.png" alt="" />
-                </Link>
-                <div className="time">3:50</div>
-              </div>
-              <div className="progress">
-                <div
-                  className="progress-bar"
-                  role="progressbar"
-                  style={{ width: "50%" }}
-                  aria-valuenow={50}
-                  aria-valuemin={0}
-                  aria-valuemax={100}
-                >
-                  1:40
-                </div>
-              </div>
-              <div className="video-card-body">
-                <div className="video-title">
-                  <Link to="#">There are many variations of passages of Lorem</Link>
-                </div>
-                <div className="video-page text-success">
-                  Education{" "}
-                  <Link
-                    title=""
-                    data-placement="top"
-                    data-toggle="tooltip"
-                    to="#"
-                    data-original-title="Verified"
-                  >
-                    <i className="fas fa-check-circle text-success" />
-                  </Link>
-                </div>
-                <div className="video-view">
-                  1.8M views &nbsp;
-                  <i className="fas fa-calendar-alt" /> 11 Months ago
-                </div>
-              </div>
-            </div>
-          </div>
-          <div className="col-xl-3 col-sm-6 mb-3">
-            <div className="video-card history-video">
-              <div className="video-card-image">
-                <Link className="video-close" to="#">
-                  <i className="fas fa-times-circle" />
-                </Link>
-                <Link className="play-icon" to="#">
-                  <i className="fas fa-play-circle" />
-                </Link>
-                <Link to="#">
-                  <img className="img-fluid" src="img/v1.png" alt="" />
-                </Link>
-                <div className="time">3:50</div>
-              </div>
-              <div className="progress">
-                <div
-                  className="progress-bar"
-                  role="progressbar"
-                  style={{ width: "50%" }}
-                  aria-valuenow={50}
-                  aria-valuemin={0}
-                  aria-valuemax={100}
-                >
-                  1:40
-                </div>
-              </div>
-              <div className="video-card-body">
-                <div className="video-title">
-                  <Link to="#">There are many variations of passages of Lorem</Link>
-                </div>
-                <div className="video-page text-success">
-                  Education{" "}
-                  <Link
-                    title=""
-                    data-placement="top"
-                    data-toggle="tooltip"
-                    to="#"
-                    data-original-title="Verified"
-                  >
-                    <i className="fas fa-check-circle text-success" />
-                  </Link>
-                </div>
-                <div className="video-view">
-                  1.8M views &nbsp;
-                  <i className="fas fa-calendar-alt" /> 11 Months ago
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
         <nav aria-label="Page navigation example">
           <ul className="pagination justify-content-center pagination-sm mb-0">
             <li className="page-item disabled">

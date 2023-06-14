@@ -4,50 +4,13 @@ import { Link } from 'react-router-dom'
 import { MdExplore } from 'react-icons/md'
 import { AiOutlineDownload } from 'react-icons/ai'
 import {BsFillBookmarkStarFill} from 'react-icons/bs'
+import Sidebar from './Sidebar'
 const Explore = () => {
     return (
         <div>
             <Header />
             <div id="wrapper">
-                <ul className="sidebar navbar-nav">
-                    <li className="nav-item active">
-                        <Link className="nav-link" to="/home">
-                            <i className="fas fa-fw fa-home" />
-                            <span>Home</span>
-                        </Link>
-                    </li>
-                    <li className="nav-item active">
-                        <Link className="nav-link" to="/myvideo">
-                            <AiOutlineDownload style={{ fontSize: "20px" }} />
-                            <span>My Download</span>
-                        </Link>
-                    </li>
-                    <li className="nav-item">
-                        <Link className="nav-link" to="/history_page">
-                            <i className="fas fa-fw fa-history" />
-                            <span>History</span>
-                        </Link>
-                    </li>
-                    <li className="nav-item">
-                        <Link className="nav-link" to="/explore">
-                            <MdExplore style={{ fontSize: "20px" }} />
-                            <span>Explore</span>
-                        </Link>
-                    </li>
-                    <li className="nav-item">
-                        <Link className="nav-link" to="/category">
-                            <i className="fas fa-fw fa-list-alt" />
-                            <span>Categories</span>
-                        </Link>
-                    </li>
-                    <li className="nav-item dropdown">
-                        <Link to="/permium" className="nav-link">
-                            <BsFillBookmarkStarFill style={{ fontSize: "20px" }} />
-                            <span>Permium Videos</span>
-                        </Link>
-
-                    </li>
-                </ul>
+                <Sidebar/>
                 <div id="content-wrapper">
 
                     <div className="container-fluid pb-0">

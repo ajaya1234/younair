@@ -24,10 +24,10 @@
     display: flex;
   }
   .slick-slide div {
-    display: flex !important;
+    /* display: flex !important; */
     flex-direction: column;
     justify-content: center;
-    align-items: center;
+    /* align-items: center; */
   }
   .slick-slide .image {
     object-fit: cover;
