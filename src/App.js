@@ -24,7 +24,7 @@ import Error404 from "./components/404";
 import ForgotPassword from "./components/ForgotPassword";
 import Myprofile from "./components/Myprofile";
 import Blank from "./components/Blank";
-import Explore from "./components/Explore";
+
 import Myvideo from "./components/Myvideo";
 import Perminum from "./components/Perminum";
 import About from "./components/About";
@@ -33,11 +33,16 @@ import Notification from './components/Notification';
 import Refer from "./components/Refer";
 import Changepassword from "./components/Changepassword";
 import Changeprofile from "./components/Changeprofile";
+import Uploadmusic from "./components/Uploadmusic";
+import Music from "./components/Music";
+import Audio from "./components/Audio";
+import Musiclist from "./components/Musiclist";
 
 
 function App() {
   return (
     <div className="App">
+      
       <Routes>
         <Route path="/" element={<Home/>}></Route>
         <Route path="/header" element={<Header/>}></Route>
@@ -60,7 +65,7 @@ function App() {
         <Route path="/404" element={<Error404 />}></Route>
       
         <Route path="/blank" element={<Blank />}></Route>
-        <Route path="/explore" element={<Explore/>}></Route>
+        
         <Route path="/myvideo" element={<Myvideo/>}></Route>
         <Route path="/permium" element={<Perminum/>}></Route>
         <Route path="/about" element={<About/>}></Route>
@@ -69,7 +74,10 @@ function App() {
         <Route path="/changepassword" element={<Changepassword/>}></Route>
         <Route path="/forgotPassword" element={<ForgotPassword/>}></Route>
         <Route path="/changeprofile" element={<Changeprofile/>}></Route>
-  
+        <Route path='/uploadmusic' element={<Uploadmusic/>}></Route>
+        <Route path="/music" element={<Music/>}></Route>
+        <Route path="/audio" element={<Audio/>}></Route>
+       <Route path="/musiclist" element={<Musiclist/>}></Route>
         {/* <Route path="/" element={<Single_Router/>}></Route>
         <Route path="/singlechannels" element={<Single_channels/>}></Route>
         <Route path="/videos" element={<Single_videos/>}></Route>

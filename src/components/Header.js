@@ -151,11 +151,11 @@ function Header() {
                 <Link className="dropdown-item" to="#">
                   <i className="fas fa-fw fa-edit " /> &nbsp; Go Live
                 </Link>
-                <Link className="dropdown-item" to="#">
+                <Link className="dropdown-item" to="/upload_Video">
                   <i className="fas fa-fw fa-headphones-alt " /> &nbsp; Upload a video
                 </Link>
                 <div className="dropdown-divider" />
-                <Link className="dropdown-item" to="#">
+                <Link className="dropdown-item" to="/uploadmusic">
                   <i className="fas fa-fw fa-star " /> &nbsp; Upload a Music
                 </Link>
               </div>
@@ -232,8 +232,29 @@ function Header() {
                 aria-haspopup="true"
                 aria-expanded="false"
               >
-                
-{lists.map((list) => {
+
+{lists && lists.length > 0 ? (
+  lists.map((list) => (
+    <React.Fragment key={list?._id}>
+      {list && list.profile_image && list.profile_image.filename ? (
+        <img
+          alt="Avatar"
+          src={"http://16.16.91.234:3003/uploads/" + list.profile_image.filename}
+        />
+      ) : (
+        <img
+          alt="Avatar"
+          src="img/logo.png" // Replace with your default image URL
+        />
+      )}
+    </React.Fragment>
+  ))
+) : (
+  <p>No data available.</p>
+)}
+
+
+{/* {lists.map((list) => {
   return (
     <>
       {list.profile_image && list.profile_image.filename ? (
@@ -249,7 +270,7 @@ function Header() {
       )}
     </>
   );
-})}
+})} */}
 
 
 
@@ -349,11 +370,11 @@ function Header() {
                 <Link className="dropdown-item" to="#">
                   <i className="fas fa-fw fa-edit " /> &nbsp; Go Live
                 </Link>
-                <Link className="dropdown-item" to="#">
+                <Link className="dropdown-item" to="/upload_Video">
                   <i className="fas fa-fw fa-headphones-alt " /> &nbsp; Upload a video
                 </Link>
                 <div className="dropdown-divider" />
-                <Link className="dropdown-item" to="#">
+                <Link className="dropdown-item" to="/uploadmusic">
                   <i className="fas fa-fw fa-star " /> &nbsp; Upload a Music
                 </Link>
               </div>
@@ -430,7 +451,7 @@ function Header() {
                 aria-haspopup="true"
                 aria-expanded="false"
               >
-                <img alt="Avatar" src="img/user.png" />
+                <img alt="Avatar" src="img/logo.png" />
                 Osahan
               </Link>
               <div

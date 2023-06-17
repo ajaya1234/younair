@@ -10,6 +10,7 @@ import { BsFillBookmarkStarFill } from 'react-icons/bs'
 import axios from 'axios';
 import Slider_1 from './Slider_1';
 import Sidebar from './Sidebar';
+import './home.css'
 
 function Home() {
   const [lists, setLists] = useState([]);
@@ -568,19 +569,21 @@ function Home() {
                 <div className="col-md-12">
                   <div id="recipeCarousel" className="carousel slide" data-bs-interval="false">
                     <div className="carousel-inner" role="listbox">
-                    <div className="row justify-content-center" >
+                    <div className="row justify-content-left" >
   {lists.map((list) => {
     
     return (
-      <div className='col-sm-4 mb-4  ' style={{borderRadius:"20px" , margin:'-12px' }} >
+      <div className='col-sm-4 mb-4  ' style={{borderRadius:"10px" ,width:'100%', marginLeft:'-10px' }} >
         
-      <div className="video-card"  style={{  width:'265px' , borderRadius:'10px' }}>
-        <div className="video-card-image" style={{ borderRadius: '10px', height: '200px' }}>
+      <div className="video-card"  style={{  width:'100%' , borderRadius:'10px' }}>
+        <div className="video-card-image" style={{ borderRadius: '10px',width:'100%', height: '160px' }}>
           <Link onClick={() => {
               localStorage.setItem("videoiid", list._id);
               localStorage.setItem("useridd", list.user_id);
               localStorage.setItem("channelid", list.channel_id);
             }} className="play-icon" to="/video_page"><i className="fas fa-play-circle" /></Link>
+         
+          
           <Link onClick={() => {
               localStorage.setItem("videoiid", list._id);
               localStorage.setItem("useridd", list.user_id);
@@ -612,10 +615,23 @@ function Home() {
               <p><i className="fas fa-eye" /> {list.video_views}</p>
               <p><i className="fa fa-thumbs-up" /> {list.video_likes}</p>
             </div>
-            <Link to="/view_profile"> <img className="img-fluid" src={"http://16.16.91.234:3003/uploads/" + list.video[1].filename} alt="" /></Link>
+            <Link onClick={() => {
+                
+                localStorage.setItem("videoiid", list._id);
+                localStorage.setItem("useridd", list.user_id);
+                localStorage.setItem("channelid", list.channel_id);
+              }} to="/view_profile"> <img className="img-fluid" src={"http://16.16.91.234:3003/uploads/" + list.video[1].filename} alt="" /></Link>
             <p>
-              <Link to="/view_profile">
-                <strong>{list.channel_name}</strong>
+              <Link onClick={() => {
+                localStorage.setItem("videoiid", list._id);
+                localStorage.setItem("useridd", list.user_id);
+                localStorage.setItem("channelid", list.channel_id);
+              }} to="/view_profile">
+                <strong onClick={() => {
+                localStorage.setItem("videoiid", list._id);
+                localStorage.setItem("useridd", list.user_id);
+                localStorage.setItem("channelid", list.channel_id);
+              }} to="/view_profile" >{list.channel_name}</strong>
               </Link>{' '}
               <span
                 title
@@ -996,19 +1012,19 @@ function Home() {
                 <div className="col-md-12">
                   <div className="main-title">
                     <h3>Top Videos</h3>
-                  </div>
+                  </div> 
                 </div>
                 <div className="col-md-12" >
                   <div id="recipeCarousel" className="carousel slide" data-bs-interval="false">
                     <div className="carousel-inner" role="listbox">
-                    <div className="row justify-content-center" >
+                    <div className="row justify-content-left" >
   {gettop.map((list) => {
     
     return (
-      <div className='col-sm-4 mb-4  ' style={{borderRadius:"20px" , margin:'-12px' }} >
+      <div className='col-sm-4 mb-4  ' style={{borderRadius:"10px" ,width:'100%', marginLeft:'-10px' }} >
         
-      <div className="video-card"  style={{  width:'265px' , borderRadius:'10px' }}>
-        <div className="video-card-image" style={{ borderRadius: '10px', height: '200px' }}>
+      <div className="video-card"  style={{  width:'100%' , borderRadius:'10px' }}>
+        <div className="video-card-image" style={{ borderRadius: '10px',width:'100%', height: '160px' }}>
           <Link onClick={() => {
               localStorage.setItem("videoiid", list._id);
               localStorage.setItem("useridd", list.user_id);
@@ -1045,10 +1061,26 @@ function Home() {
               <p><i className="fas fa-eye" /> {list.video_views}</p>
               <p><i className="fa fa-thumbs-up" /> {list.video_likes}</p>
             </div>
-            <Link to="/view_profile"> <img className="img-fluid" src={"http://16.16.91.234:3003/uploads/" + list.video[1].filename} alt="" /></Link>
+            <Link onClick={() => {
+                localStorage.setItem("videoiid", list._id);
+                localStorage.setItem("useridd", list.user_id);
+                localStorage.setItem("channelid", list.channel_id);
+              }} to="/view_profile"> <img onClick={() => {
+                localStorage.setItem("videoiid", list._id);
+                localStorage.setItem("useridd", list.user_id);
+                localStorage.setItem("channelid", list.channel_id);
+              }} to="/view_profile" className="img-fluid" src={"http://16.16.91.234:3003/uploads/" + list.video[1].filename} alt="" /></Link>
             <p>
-              <Link to="/view_profile">
-                <strong>{list.channel_name}</strong>
+              <Link onClick={() => {
+                localStorage.setItem("videoiid", list._id);
+                localStorage.setItem("useridd", list.user_id);
+                localStorage.setItem("channelid", list.channel_id);
+              }} to="/view_profile">
+                <strong onClick={() => {
+                localStorage.setItem("videoiid", list._id);
+                localStorage.setItem("useridd", list.user_id);
+                localStorage.setItem("channelid", list.channel_id);
+              }} to="/view_profile" >{list.channel_name}</strong>
               </Link>{' '}
               <span
                 title

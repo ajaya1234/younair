@@ -131,24 +131,36 @@ const Slider_1 = () => {
                             >
                               <div className="float-right">
                                 <p style={{fontSize:'9px'}}>
-                                  <i className="fas fa-eye" /> 11
+                                  <i className="fas fa-eye" /> {list.video_views}
                                 </p>
                                 <p style={{fontSize:'9px'}}>
-                                  <i className="fa fa-thumbs-up" /> 0
+                                  <i className="fa fa-thumbs-up" /> {list.video_likes}
                                 </p>
                               </div>
-                              <a href="/view_profile">
+                              <Link onClick={() => {
+                localStorage.setItem("videoiid", list._id);
+                localStorage.setItem("useridd", list.user_id);
+                localStorage.setItem("channelid", list.channel_id);
+              }} to="/view_profile">
                                 {" "}
                                 <img style={{height:'20px' , width:'20px'}}
                                   className="img-fluid"
-                                  src="http://16.16.91.234:3003/uploads/1686221943421.jpg"
+                                  src={
+                                    "http://16.16.91.234:3003/uploads/" +
+                                    list.video[1].filename
+                                  }
                                   alt=""
                                 />
-                              </a>
+                              </Link>
                               <p>
-                                <a href="/view_profile">
-                                  <strong>rishi</strong>
-                                </a>{" "}
+                                <Link onClick={() => {
+                localStorage.setItem("videoiid", list._id);
+                localStorage.setItem("useridd", list.user_id);
+                localStorage.setItem("channelid", list.channel_id);
+              }} to="/view_profile"
+              >
+                                  <strong style={{fontSize:'10px'}}>{list.channel_name}</strong>
+                                </Link>{" "}
                                 <span
                                   data-placement="top"
                                   data-toggle="tooltip"

@@ -81,78 +81,63 @@ const Changeprofile = () => {
     <Header />
     <Sidebar />
     <div id="wrapper">
-      <div id="content-wrapper">
-        <div className="container-fluid">
-          <div className="video-block section-padding">
-            <div className="row">
-              <div className="col-md-12">
-                <div className="main-title">
-                  <h6>Setting</h6>
-                </div>
-              </div>
-              <div className="col-xl-3 col-sm-3 mb-3">
-                <div
-                  className="category-item mt-0 mb-0"
-                  style={{ background: "#fafafa" }}
-                >
-                  <a data-toggle="modal" data-target="#myModal" href>
-                  {/* {lists.map((list) => {
-                          return (
-                <img className="img-fluid" alt="Avatar" src={
-                  "http://16.16.91.234:3003/uploads/" +
-                  list.profile_image.filename
-                } />
-                );
-            })} */}
-
-
-{lists.map((list) => {
-  return (
-    <>
-      {list.profile_image && list.profile_image.filename ? (
-        <img
-        className="img-fluid" alt="Avatar"
-          src={"http://16.16.91.234:3003/uploads/" + list.profile_image.filename}
-        />
-      ) : (
-        <img
-        className="img-fluid" alt="Avatar"
-          src="img/logo.png" // Replace with your default image URL
-        />
-      )}
-    </>
-  );
-})}
-                    
-                    
-                    {/* <img className="img-fluid" src="img/profile.png" alt="" /> */}
-                    <h5 data-toggle="modal" data-target="#myModal">
-                      Change Profile {" "}
-                      <span
-                        data-toggle="modal"
-                        data-target="#myModal"
-                        title
-                        data-placement="top"
-                        data-original-title="Verified"
-                      />
-                    </h5>
-                  </a>
-                  
-                </div>
-              </div>
-              
-             
-              
-              
-              
-
-              
-              
+  <div id="content-wrapper">
+    <div className="container-fluid">
+      <div className="video-block section-padding">
+        <div className="row">
+          <div className="col-md-12">
+            <div className="main-title">
+              <h6>Setting</h6>
+            </div>
+          </div>
+          <div className="col-xl-3 col-sm-3 mb-3">
+            <div
+              className="category-item mt-0 mb-0"
+              style={{ background: "#fafafa" }}
+            >
+              <a data-toggle="modal" data-target="#myModal" href>
+                {lists && lists.length > 0 ? (
+                  <>
+                    {lists.map((list) => (
+                      <React.Fragment key={list?._id}>
+                        {list.profile_image && list.profile_image.filename ? (
+                          <img
+                            className="img-fluid"
+                            alt="Avatar"
+                            src={"http://16.16.91.234:3003/uploads/" + list.profile_image.filename}
+                          />
+                        ) : (
+                          <img
+                            className="img-fluid"
+                            alt="Avatar"
+                            src="img/logo.png" // Replace with your default image URL
+                          />
+                        )}
+                      </React.Fragment>
+                    ))}
+                  </>
+                ) : (
+                  <img className="img-fluid" alt="Avatar" src="img/logo.png" />
+                )}
+                {/* <h5 data-toggle="modal" data-target="#myModal">
+                  Change Profile{" "}
+                  <span
+                    data-toggle="modal"
+                    data-target="#myModal"
+                    title
+                    data-placement="top"
+                    data-original-title="Verified"
+                  />
+                </h5> */}
+              </a>
             </div>
           </div>
         </div>
       </div>
     </div>
+  </div>
+</div>
+
 
     <div className="modal" id="myModal">
       <div className="modal-dialog">

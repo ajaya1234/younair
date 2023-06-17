@@ -6,6 +6,11 @@ import Footer from "./Footer";
 import { useState, useEffect } from "react";
 import axios from "axios";
 import ReactPlayer from "react-player";
+import {FaShare} from 'react-icons/fa'
+import {FaDownload} from 'react-icons/fa'
+import { SlLike} from 'react-icons/sl'
+import './home.css'
+
 
 function Video_Page() {
   const [lists, setLists] = useState([]);
@@ -295,6 +300,37 @@ function Video_Page() {
   // };
 
 
+  const download = async () => {
+    const idddd = localStorage.getItem("videoiid");
+    const useriddd = localStorage.getItem("_id");
+    const channeliddd = localStorage.getItem("channelid");
+
+    const options = {
+      headers: {
+        "content-type": "application/json; charset=utf-8",
+        "Access-Control-Allow-Origin": "*",
+      },
+    };
+
+    const data = JSON.stringify({
+      video_id: idddd,
+      user_id: useriddd,
+      channel_id: channeliddd,
+      
+    });
+
+    await axios
+      .post("http://16.16.91.234:3003/api/download_video", data, options)
+      .then((res) => {
+        console.log("downloaddddd response of ", res)
+        //setcomment(res.data.data);
+      })
+      .catch((err) => {
+        console.error("API Error:", err);
+      });
+  };
+
+
 
 
 
@@ -463,32 +499,36 @@ function Video_Page() {
 
 <button
     onClick={addwishlist}
-    className="btn btn-danger"
+    className="btn btn-danger subbtn "
     type="button"
   >
     Subscribe
-    <strong>{subscribeMsg && <p>{subscribeMsg}</p>}10.4M</strong>
+    <strong>{subscribeMsg && <p>{subscribeMsg}</p>}</strong>
   </button>
 
                            
                            
                             
-                            <button
+                            {/* <button
                               className="btn btn btn-outline-danger"
                               type="button"
                             >
                               <i className="fas fa-bell" />
-                            </button>
+                            </button> */}
+
                           </div>
-                          <img className="img-fluid" src={
+
+                          <div className="mainprofile">
+                          <img className="img-fluid mainprofileimg " src={
                                   "http://16.16.91.234:3003/uploads/" +
                                   list.video[1].filename
                                 } alt="" />
                           <p>
-                            <Link to="#">
+                            <Link to="#" className="mainprofilecannelname">
                               <strong>{list.channel_name}</strong>
                             </Link>{" "}
-                            <span
+
+                            <span className="mainprofileicon"
                               title=""
                               data-placement="top"
                               data-toggle="tooltip"
@@ -497,17 +537,75 @@ function Video_Page() {
                               <i className="fas fa-check-circle text-success" />
                             </span>
                           </p>
-                          <small>Published on Aug 10, 2020</small>
+                          </div>
+<br/>
+<br/>
 
-                          <p>
-                            <input
-                              type="text"
-                              placeholder="Comment"
-                              value={ccomment}
-                              onChange={(e) => setCcomment(e.target.value)}
-                            />
+
+
+
+
+
+
+
+
+                          <div className="row justify-content-center">
+                            <div className="col-lg-5 col-md-6 col-sm-12">
+                            <span style={{color:'black'}}> <SlLike/></span>&nbsp;&nbsp;&nbsp;
+
+{list.video_likes}K &nbsp;&nbsp;&nbsp; 
+
+<input style={{borderRadius:'15px' , width:'100px'}}
+    type="text"
+    placeholder="Comment"
+    value={ccomment}
+    onChange={(e) => setCcomment(e.target.value)}
+  />
+                          <button  style={{borderRadius:'15px' , background:"#ff253a" , color:'white'}} onClick={sendcomment}>Send</button>&nbsp;&nbsp;&nbsp;&nbsp;
+
+                            </div>
+         
+<div className="col-lg-7 col-md-6 col-sm-12 mt-1 row">
+
+                          <div className="">
+                          <FaShare/><button style={{borderRadius:'15px' , background:"#ff253a" , color:'white'}} onClick={sendcomment}>Share</button>&nbsp;&nbsp;&nbsp;&nbsp;
+
+                          </div>
+                          <div className="">
+                          <FaShare/><button style={{borderRadius:'15px' , background:"#ff253a" , color:'white'}} onClick={sendcomment}>Save</button>&nbsp;&nbsp;&nbsp;&nbsp;
+
+                          </div>
+
+                          <div className="">
+                        
+                           <button style={{borderRadius:'15px' , background:"#ff253a" , color:'white'}} onClick={download}>Download</button> 
                           
-                          <button onClick={sendcomment}>Submit</button></p>
+</div>
+</div>
+
+
+
+                          
+                          </div> 
+                          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
                         </div>
                         {/* <div className="single-video-info-content box mb-3">
                           <h6>Title:</h6>
@@ -557,9 +655,19 @@ function Video_Page() {
                       </div>
                     );
                   })}
-{getcommt.slice(-5).map((list) => {
+
+
+{getcommt && getcommt.length > 0 ? (
+  getcommt.slice(-5).map((list) => (
+    <p>{list.msg}</p>
+  ))
+) : (
+  <p>No comments</p>
+)}
+
+{/* {getcommt.slice(-5).map((list) => {
   return <p>{list.msg}</p>;
-})}
+})} */}
 
 {/* {lists.msg ? (
   getcommt.slice(-5).map((list) => {

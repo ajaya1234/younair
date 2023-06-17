@@ -9,14 +9,14 @@ function Sidebar() {
   return (
    <>
    <ul className="sidebar navbar-nav">
-    <li className="nav-item active">
+    <li className="nav-item ">
       <Link className="nav-link" to="/home">
         <i className="fas fa-fw fa-home" />
         <span>Home</span>
       </Link>
     </li>
     <li className="nav-item ">
-    <Link className="nav-link" to="">
+    <Link className="nav-link" to="/music">
     <BsFileMusicFill style={{ fontSize: "20px" }} />
     <span>Music</span>
 </Link>
@@ -84,12 +84,12 @@ function Sidebar() {
         <span>History</span>
       </Link>
     </li>
-    <li className="nav-item">
+    {/* <li className="nav-item">
     <Link className="nav-link" to="/explore">
     <MdExplore style={{fontSize:"20px"}}/>
       <span>Explore</span>
     </Link>
-  </li>
+  </li> */}
     <li className="nav-item dropdown">
       <Link to="/category" className="nav-link">
         <i className="fas fa-fw fa-list-alt" />
