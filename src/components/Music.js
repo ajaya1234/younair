@@ -23,6 +23,8 @@ const Music = () => {
   const [getmusicc, setGetmusicc] = useState([]);
   const [getcommt, setgetcomment] = useState([]);
 
+  const[successMessage , setSuccessMessage] = useState('');
+
   //   const removeCartitem = (item) => {
   //     const idddd = localStorage.getItem("_id");
   //     const options = {
@@ -95,9 +97,12 @@ const Music = () => {
     axios
       .post("http://16.16.91.234:3003/api/delete_my_playlist_audio", data, options)
       .then((res) => {
-        console.log("Delete response:", res.data);
+        setSuccessMessage('Delete successfully!');
         get_my_playlist();
+
+        
       })
+
       .catch((err) => {
         console.error(err);
       });
@@ -245,89 +250,9 @@ const Music = () => {
       <Sidebar />
       <div>
         <div className="single-channel-page" id="content-wrapper">
-        {/* <div className="single-channel-image">
-        <img
-                style={{ height: "150px" }}
-                className="img-fluid"
-                alt="Channel Image"
-                src="img/logo.png" // Replace with your default image URL
-              />
-          </div> */}
-
-
-          {/* <div className="single-channel-image">
-            {lists.length > 0 &&
-            lists[0].image &&
-            lists[0].image[0] &&
-            lists[0].image[0].filename ? (
-              <img
-                style={{ height: "250px" }}
-                className="img-fluid"
-                alt="Channel Image"
-                src={
-                  "http://16.16.91.234:3003/uploads/" +
-                  lists[0].image[0].filename
-                }
-              />
-            ) : (
-              <img
-                style={{ height: "250px" }}
-                className="img-fluid"
-                alt="Channel Image"
-                src="img/logo.png" // Replace with your default image URL
-              />
-            )}
-
-            <div className="channel-profile">
-              {lists.length > 0 &&
-              lists[0].image &&
-              lists[0].image[1] &&
-              lists[0].image[1].filename ? (
-                <img
-                  className="channel-profile-img"
-                  alt="Avatar"
-                  src={
-                    "http://16.16.91.234:3003/uploads/" +
-                    lists[0].image[1].filename
-                  }
-                />
-              ) : (
-                <img
-                  className="channel-profile-img"
-                  alt="Avatar"
-                  src="img/logo.png" // Replace with your default image URL
-                />
-              )}
-
-              <div className="social hidden-xs">
-                <Link to="/setting">
-                  <AiFillSetting style={{ fontSize: 35, color: "white" }} />
-                </Link>
-                <a href>
-                  <FaRegEdit style={{ fontSize: 35, color: "white" }} />
-                </a>
-              </div>
-            </div>
-          </div> */}
-
+       
           <Tabs className="mt-2">
-            {/* {lists.length > 0 && (
-              <a
-                style={{ marginLeft: "15px" }}
-                className="channel-brand"
-                href="#"
-              >
-                {lists[0].channel_name}{" "}
-                <span
-                  title
-                  data-placement="top"
-                  data-toggle="tooltip"
-                  data-original-title="Verified"
-                >
-                  <i className="fas fa-check-circle text-success" />
-                </span>
-              </a>
-            )} */}
+           
             <hr />
 
             <TabList className="single-channel-nav p-3 text-center">
@@ -387,7 +312,7 @@ const Music = () => {
                                   </Link>
                                   <Link onClick={() => {
               localStorage.setItem("getsingleaudio", list._id); }} to="/audio">
-                                  <img style={{height:'100%'}} className="img-fluid" src='img/music.png' alt="" />
+                                  <img style={{height:'100%'}} className="img-fluid" src='img/logo.png' alt="" />
                                    <FcMusic/> 
                                   </Link>
                                   
@@ -504,35 +429,7 @@ const Music = () => {
                       </div>
                     </div>
                   </div>
-                  <nav aria-label="Page navigation example">
-                    <ul className="pagination justify-content-center pagination-sm mb-0">
-                      <li className="page-item disabled">
-                        <a tabIndex={-1} href="#" className="page-link">
-                          Previous
-                        </a>
-                      </li>
-                      <li className="page-item active">
-                        <a href="#" className="page-link">
-                          1
-                        </a>
-                      </li>
-                      <li className="page-item">
-                        <a href="#" className="page-link">
-                          2
-                        </a>
-                      </li>
-                      <li className="page-item">
-                        <a href="#" className="page-link">
-                          3
-                        </a>
-                      </li>
-                      <li className="page-item">
-                        <a href="#" className="page-link">
-                          Next
-                        </a>
-                      </li>
-                    </ul>
-                  </nav>
+                 
                 </div>
               </div>
             </TabPanel>
@@ -546,8 +443,10 @@ const Music = () => {
                       id="ex1-tabs-1"
                       role="tabpanel"
                       aria-labelledby="ex1-tab-1"
-                    >
+                    ><font style={{color:'blue'}}>{successMessage && <p>{successMessage}</p>}</font>
+
                       <div className="row">
+                        
                         {getplaylist.map((list) => {
                           return (
                             <div
@@ -709,35 +608,7 @@ const Music = () => {
                       </div>
                     </div>
                   </div>
-                  <nav aria-label="Page navigation example">
-                    <ul className="pagination justify-content-center pagination-sm mb-0">
-                      <li className="page-item disabled">
-                        <a tabIndex={-1} href="#" className="page-link">
-                          Previous
-                        </a>
-                      </li>
-                      <li className="page-item active">
-                        <a href="#" className="page-link">
-                          1
-                        </a>
-                      </li>
-                      <li className="page-item">
-                        <a href="#" className="page-link">
-                          2
-                        </a>
-                      </li>
-                      <li className="page-item">
-                        <a href="#" className="page-link">
-                          3
-                        </a>
-                      </li>
-                      <li className="page-item">
-                        <a href="#" className="page-link">
-                          Next
-                        </a>
-                      </li>
-                    </ul>
-                  </nav>
+                
                 </div>
               </div>
             </TabPanel>

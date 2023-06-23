@@ -27,3 +27,17 @@ float: right;
     left: 75px;
 }
   }
+
+
+
+  .boxdoticons{
+    position: relative;
+    }
+    .doticon{
+    position: absolute;
+    top: 167px;
+    right: 18px;
+    }
+
+
+    

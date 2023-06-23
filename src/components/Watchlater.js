@@ -6,43 +6,8 @@ import Sidebar from './Sidebar'
 import { useState } from 'react'
 import { useEffect } from 'react'
 
-const Myvideo = () => {
+const Watchlater = () => {
     const [getdownloadd, setGetdownloadd] = useState([]);
-
-    const formatDate = (dateString) => {
-      const date = new Date(dateString);
-      const now = new Date();
-      
-      const timeDiff = Math.abs(now - date);
-      
-      const years = Math.floor(timeDiff / (1000 * 60 * 60 * 24 * 365));
-      if (years > 0) {
-        return years === 1 ? '1 year ago' : `${years} years ago`;
-      }
-      
-      const months = Math.floor(timeDiff / (1000 * 60 * 60 * 24 * 30));
-      if (months > 0) {
-        return months === 1 ? '1 month ago' : `${months} months ago`;
-      }
-      
-      const days = Math.floor(timeDiff / (1000 * 60 * 60 * 24));
-      if (days > 0) {
-        return days === 1 ? '1 day ago' : `${days} days ago`;
-      }
-      
-      const hours = Math.floor(timeDiff / (1000 * 60 * 60));
-      if (hours > 0) {
-        return hours === 1 ? '1 hour ago' : `${hours} hours ago`;
-      }
-      
-      const minutes = Math.floor(timeDiff / (1000 * 60));
-      if (minutes > 0) {
-        return minutes === 1 ? '1 minute ago' : `${minutes} minutes ago`;
-      }
-      
-      return 'Just now';
-    };
-
 
 
     useEffect(() => {
@@ -65,11 +30,12 @@ const Myvideo = () => {
     
         try {
           const response = await axios.post(
-            "http://16.16.91.234:3003/api/get_download_video",
+            "http://16.16.91.234:3003/api/get_save_watch_later",
             data,
             options
           );
           setGetdownloadd(response.data.data);
+          console.log("sdasdas",response.data.data)
         } catch (err) {
           console.error(err);
         }
@@ -93,7 +59,7 @@ const Myvideo = () => {
         });
     
         axios
-          .post("http://16.16.91.234:3003/api/delete_download_video", data, options)
+          .post("http://16.16.91.234:3003/api/delete_save_watch_later", data, options)
           .then((res) => {
             getdownload();
           })
@@ -113,7 +79,7 @@ const Myvideo = () => {
                 <Sidebar/>
                 <div id="content-wrapper">
                 <div className="container-fluid">
-                <h4>My Download </h4>
+                <h4>Watch-later Videos </h4>
                 <div className="video-block section-padding">
                   <div className="tab-content" id="ex1-content">
                     <div
@@ -137,7 +103,7 @@ const Myvideo = () => {
                                 style={{ borderRadius: "15px" }}
                                 className="fas fa-times-circle btn "
                                 onClick={() =>
-                                  removeCartitem(list.video_data._id)
+                                  removeCartitem(list.video_id)
                                 }
                               ></button>
                               <div
@@ -162,7 +128,7 @@ const Myvideo = () => {
                                         "channelid",
                                         list.channel_id
                                       );
-                                      localStorage.setItem("categorytpee", list.category_type);
+                                      localStorage.setItem("categorytpee", list.video_data[0].category_type);
                                     }}
                                   >
                                     <i className="fas fa-play-circle" />
@@ -174,13 +140,13 @@ const Myvideo = () => {
                                   "channelid",
                                   list.channel_id
                                 );
-                                localStorage.setItem("categorytpee", list.category_type);
+                                localStorage.setItem("categorytpee", list.video_data[0].category_type);
                               }}>
                                     <img
                                       className="img-fluid"
                                       src={
                                         "http://16.16.91.234:3003/uploads/" +
-                                        list.video_data.video[1].filename
+                                        list.channel_data[0].image[1].filename
                                       }
                                       alt
                                     />
@@ -196,7 +162,7 @@ const Myvideo = () => {
                                   "channelid",
                                   list.channel_id
                                 );
-                                localStorage.setItem("categorytpee", list.category_type);
+                                localStorage.setItem("categorytpee", list.video_data[0].category_type);
                               }}>
                                       {list.video_data.video_name}
                                     </Link>
@@ -217,14 +183,14 @@ const Myvideo = () => {
                 localStorage.setItem("videoiid", list._id);
                 localStorage.setItem("useridd", list.user_id);
                 localStorage.setItem("channelid", list.channel_id);
-                localStorage.setItem("categorytpee", list.category_type);
+                localStorage.setItem("categorytpee", list.video_data[0].category_type);
               }} to="/view_profile">
                                       {" "}
                                       <img
                                         className="img-fluid"
                                         src={
                                           "http://16.16.91.234:3003/uploads/" +
-                                          list.video_data.video[1].filename
+                                          list.channel_data[0].image[0].filename
                                         }
                                         alt
                                       />
@@ -234,15 +200,16 @@ const Myvideo = () => {
                 localStorage.setItem("videoiid", list._id);
                 localStorage.setItem("useridd", list.user_id);
                 localStorage.setItem("channelid", list.channel_id);
-                localStorage.setItem("categorytpee", list.category_type);
+                localStorage.setItem("categorytpee", list.video_data[0].category_type);
               }} to="/view_profile">
                                         <strong>
-                                          {list.video_data.channel_name}
+                                          {list.channel_data[0].channel_name}
+                                          
                                         </strong>
                                       </Link>{" "}
-                                      
+                                     
                                     </p>
-                                    <p>{formatDate(list.current_date)}</p>
+                                    {/* <p>{list.current_date}</p> */}
                                   </div>
                                 </div>
                               </div>
@@ -373,4 +340,4 @@ const Myvideo = () => {
     )
 }
 
-export default Myvideo
+export default Watchlater

@@ -18,7 +18,9 @@ const Setting = () => {
   const [description, setDescription] = useState("");
   const [channelname, setChannelname] = useState("");
   const [lists, setLists] = useState([]);
+  const [error, setError] = useState('');
 
+  
   const usered = localStorage.getItem("_id");
 
   const handleProfileImageSelect = (event) => {
@@ -31,6 +33,23 @@ const Setting = () => {
 
   const handleFormSubmit = async (event) => {
     event.preventDefault();
+
+
+    if (!selectedProfileImage || !selectedCoverImage) {
+      setError('Please select both profile and cover images.');
+      return;
+    }
+    if (!channelname.trim()) {
+      setError('Please enter a channel name.');
+      return;
+    }
+    if (!description.trim()) {
+      setError('Please enter a description.');
+      return;
+    }
+
+
+   
     const formData = new FormData();
     formData.append("profile_image", selectedProfileImage);
     formData.append("cover_image", selectedCoverImage);
@@ -50,7 +69,13 @@ const Setting = () => {
           },
         }
       );
-      console.log("response checkkk",formData)
+      
+      
+      setSelectedProfileImage(null);
+      setSelectedCoverImage(null);
+      setChannelname('');
+      setDescription('');
+      setError('');
     } catch (error) {
       console.error("Error creating channel:", error.response.data);
     }
@@ -112,7 +137,7 @@ const Setting = () => {
                     <a data-toggle="modal" data-target="#myModal" href>
                       <img className="img-fluid" src="img/profile.png" alt="" />
                       <h5 data-toggle="modal" data-target="#myModal">
-                        Profile Settings{" "}
+                        Create Channel{" "}
                         <span
                           data-toggle="modal"
                           data-target="#myModal"
@@ -129,10 +154,10 @@ const Setting = () => {
                     className="category-item mt-0 mb-0"
                     style={{ background: "#fafafa" }}
                   >
-                    <a href>
+                    <Link to='/watchlater'>
                       <img className="img-fluid" src="img/data.png" alt="" />
                       <h5>
-                        data Saving
+                        Watchlater
                         <span
                           title
                           data-placement="top"
@@ -140,7 +165,7 @@ const Setting = () => {
                           data-original-title="Verified"
                         />
                       </h5>
-                    </a>
+                    </Link>
                   </div>
                 </div>
                 <div className="col-xl-3 col-sm-3 mb-3">
@@ -164,10 +189,10 @@ const Setting = () => {
                     className="category-item mt-0 mb-0"
                     style={{ background: "#fafafa" }}
                   >
-                    <a href>
+                    <Link to='/blockuser'>
                       <img className="img-fluid" src="img/Chat.png" alt="" />
-                      <h5>Chat</h5>
-                    </a>
+                      <h5>Blocked Users</h5>
+                    </Link>
                   </div>
                 </div>
                 <div className="col-xl-3 col-sm-3 mb-3">
@@ -250,6 +275,7 @@ const Setting = () => {
           </div>
 
           <div className="card-footer">
+          <font style={{color:'blue'}}>{error && <p >{error}</p>}</font>
             <form onSubmit={handleFormSubmit}>
               <div>
                 <label htmlFor="profile-picture-input">

@@ -1,57 +1,88 @@
 import React, { useEffect, useState } from "react";
 import Sidebar from "./Sidebar";
-import { Link, json } from "react-router-dom";
+import { Link } from "react-router-dom";
 import Header from "./Header";
 import Footer from "./Footer";
 import axios from "axios";
-import { AiOutlineEuroCircle } from "react-icons/ai";
 
 function Upload_Video() {
+  const [successMessage, setSuccessMessage] = useState('');
+  
   const iddd = localStorage.getItem("_id");
-  const channelnamee=localStorage.getItem("channel_name")
-  const channeliid=localStorage.getItem("channel_id")
+  const channelnamee = localStorage.getItem("channel_name");
+  const channeliid = localStorage.getItem("channel_id");
 
-  
-  
-
-
-
-
-  let [inputvalue, setinputvalue] = useState({
+  const [inputvalue, setinputvalue] = useState({
     user_id: iddd,
     channel_id: channeliid,
     channel_name: channelnamee,
     video_name: "",
     desc: "",
-    category_type :"",
+    category_type: "",
+    video_url: "",
   });
 
-  let [thumb, setthumb] = useState({
-    video_thumbnail: "",
-  });
-  let [videofiles, setvideofiles] = useState({
+ 
+
+  const [videofiles, setvideofiles] = useState({
     user_video: "",
   });
 
-  let inputHandel = (event) => {
+  const [thumb, setthumb] = useState({
+    video_thumbnail: "",
+  });
+
+
+  const [error, setError] = useState('');
+
+  const inputHandel = (event) => {
     setinputvalue({ ...inputvalue, [event.target.name]: event.target.value });
   };
 
-  let thumbFileHandel = (event) => {
+  const thumbFileHandel = (event) => {
     setthumb({ ...thumb, [event.target.name]: event.target.files[0] });
   };
 
-  let videoFileHandel = (event) => {
+  const videoFileHandel = (event) => {
     setvideofiles({
       ...videofiles,
       [event.target.name]: event.target.files[0],
     });
   };
 
-  let FormHandel = (event) => {
+  const formHandel = (event) => {
     event.preventDefault();
 
-    let formdata = new FormData();
+    // Validation checks
+    if (!inputvalue.video_name.trim()) {
+      setError('Please enter a video name.');
+      return;
+    }
+    if (!inputvalue.category_type) {
+      setError('Please select a category.');
+      return;
+    }
+    if (!inputvalue.category_type) {
+      setError('Please select a category.');
+      return;
+    }
+
+    
+    if (!inputvalue.video_url) {
+      setError('Please Enter a Video Url.');
+      return;
+    }
+
+    if (!thumb.video_thumbnail) {
+      setError('Please select a thumbnail image.');
+      return;
+    }
+    if (!videofiles.user_video) {
+      setError('Please select a video file.');
+      return;
+    }
+
+    const formdata = new FormData();
 
     formdata.append("user_id", inputvalue.user_id);
     formdata.append("channel_id", inputvalue.channel_id);
@@ -59,21 +90,19 @@ function Upload_Video() {
     formdata.append("video_name", inputvalue.video_name);
     formdata.append("category_type", inputvalue.category_type);
     formdata.append("desc", inputvalue.desc);
-    formdata.append("video_thumbnail", thumb.video_thumbnail);
     formdata.append("user_video", videofiles.user_video);
+    formdata.append("video_thumbnail", thumb.video_thumbnail);
+    formdata.append("video_url", inputvalue.video_url);
 
-  console.log("form data checking",formdata)
+    
 
-    axios
-      .post(`http://16.16.91.234:3003/api/upload_video`, formdata)
+    axios.post(`http://16.16.91.234:3003/api/upload_video`, formdata)
       .then((res) => {
-        console.log(res);
+        
+        setSuccessMessage('Video uploaded successfully!');
       });
   };
 
-
-
-  
   return (
     <>
       <Header />
@@ -81,47 +110,13 @@ function Upload_Video() {
       <div id="wrapper">
         <div id="content-wrapper">
           <div className="container-fluid upload-details">
-            <form method="post" onSubmit={FormHandel}>
-              <div className="row just">
-                <div className="col-lg-12">
-                  <div className="main-title">
-                    <h6>Video Upload</h6>
-                  </div>
-                </div>
-                <div className="col-lg-2">
-                  <div className="imgplace" />
-                </div>
-                <div className="col-lg-10">
-                  <div className="osahan-title">
-                    Contrary to popular belief, Lorem Ipsum (2020) is not.
-                  </div>
-                  <div className="osahan-size">
-                    102.6 MB . 2:13 MIN Remaining
-                  </div>
-                  <div className="osahan-progress">
-                    <div className="progress">
-                      <div
-                        className="progress-bar progress-bar-striped progress-bar-animated"
-                        role="progressbar"
-                        aria-valuenow={75}
-                        aria-valuemin={0}
-                        aria-valuemax={100}
-                        style={{ width: "75%" }}
-                      />
-                    </div>
-                    <div className="osahan-close">
-                      <Link to="#">
-                        <i className="fas fa-times-circle" />
-                      </Link>
-                    </div>
-                  </div>
-                  <div className="osahan-desc">
-                    Your Video is still uploading, please keep this page open
-                    until it's done.
-                  </div>
-                </div>
-              </div>
+          
+          
+            <form method="post" onSubmit={formHandel}>
+              
               <hr />
+              <font style={{color:'blue'}}>{error && <p >{error}</p>}</font>
+              <font style={{color:'blue'}}>{successMessage && <p>{successMessage}</p>}</font>
               <div className="row">
                 <div className="col-lg-12">
                   <div className="osahan-form">
@@ -132,15 +127,13 @@ function Upload_Video() {
                           <textarea
                             placeholder="Description"
                             rows={3}
-                            name="description"
+                            name="desc"
                             onChange={inputHandel}
                             className="form-control"
                           />
                         </div>
                       </div>
                     </div>
-
-
                     <div className="row">
                       <div className="col-lg-6">
                         <div className="form-group">
@@ -155,32 +148,48 @@ function Upload_Video() {
                         </div>
                       </div>
                       <div className="col-lg-6">
-  <div className="form-group">
-    <label htmlFor="e5">Category Type</label>
-    <select
-      name="category_type"
-      onChange={inputHandel}
-      className="form-control"
-    >
-      <option value="">Select Category</option>
-      <option value="Bollywood">Bollywood</option>
-      <option value="Hollywood">Hollywood</option>
-      <option value="Tollywood">Tollywood</option>
-    </select>
-  </div>
-</div>
-
-
-                     
-
+                        <div className="form-group">
+                          <label htmlFor="e5">Category Type</label>
+                          <select
+                            name="category_type"
+                            onChange={inputHandel}
+                            className="form-control"
+                          >
+                            <option value="">Select Category</option>
+                            <option value="bollywood">Bollywood</option>
+                            <option value="hollywood">Hollywood</option>
+                            <option value="tollywood">Tollywood</option>
+                          </select>
+                        </div>
+                      </div>
                       <div className="col-lg-6">
                         <div className="form-group">
-                          <label htmlFor="e5">Video_url</label>
+                          <label htmlFor="e5">Video URL</label>
                           <input
                             type="text"
                             placeholder="Title"
                             name="video_url"
                             onChange={inputHandel}
+                            className="form-control"
+                          />
+                        </div>
+                      </div>
+                     
+                    </div>
+                    <div className="row ">
+                      <div className="col-lg-12">
+                        <div className="main-title" />
+                      </div>
+                    </div>
+                    <div className="row category-checkbox">
+                      <div className="col-lg-6 col-xs-6 col-sm-12">
+                        <div className="form-group">
+                          <label htmlFor="e1">Select Video</label>
+                          <input
+                            type="file"
+                            placeholder="Choose File Here..."
+                            name="user_video"
+                            onChange={videoFileHandel}
                             className="form-control"
                           />
                         </div>
@@ -198,33 +207,15 @@ function Upload_Video() {
                         </div>
                       </div>
                     </div>
-                    <div className="row ">
-                      <div className="col-lg-12">
-                        <div className="main-title"></div>
-                      </div>
-                    </div>
-                    <div className="row category-checkbox">
-                      <div className="col-lg-6 col-xs-6 col-sm-12">
-                        <div className="form-group">
-                          <label htmlFor="e1">Select Video</label>
-                          <input
-                            type="file"
-                            placeholder="Choose File Here..."
-                            name="user_video"
-                            onChange={videoFileHandel}
-                            className="form-control"
-                          />
-                        </div>
-                      </div>
-                    </div>
                   </div>
                   <div className="osahan-area text-center mt-3">
+                    
                     <button
                       className="btn btn-primary"
                       type="submit"
                       style={{ background: "#000080", borderRadius: 4 }}
                     >
-                      Upload{" "}
+                      Upload
                     </button>
                   </div>
                 </div>

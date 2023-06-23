@@ -57,7 +57,7 @@ const Addtoplaylist = () => {
     axios
       .post("http://16.16.91.234:3003/api/upload_my_playlist_audio", data, options)
       .then((res) => {
-        console.log("Delete response:", res.data);
+        
         
       })
       .catch((err) => {
@@ -99,7 +99,7 @@ const Addtoplaylist = () => {
       );
       
       setSuccessMessage("Music playlist created successfully.");
-      console.log("response checkkk", response.data);
+      
     } catch (error) {
       console.log(error);
     }
@@ -137,7 +137,7 @@ const Addtoplaylist = () => {
         
       }
       
-      console.log("response of get my playlist",response.data.data )
+      
     } catch (err) {
       console.error(err);
     }

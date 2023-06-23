@@ -6,44 +6,9 @@ import Sidebar from './Sidebar'
 import { useState } from 'react'
 import { useEffect } from 'react'
 
-const Myvideo = () => {
+const Blockuser = () => {
     const [getdownloadd, setGetdownloadd] = useState([]);
-
-    const formatDate = (dateString) => {
-      const date = new Date(dateString);
-      const now = new Date();
-      
-      const timeDiff = Math.abs(now - date);
-      
-      const years = Math.floor(timeDiff / (1000 * 60 * 60 * 24 * 365));
-      if (years > 0) {
-        return years === 1 ? '1 year ago' : `${years} years ago`;
-      }
-      
-      const months = Math.floor(timeDiff / (1000 * 60 * 60 * 24 * 30));
-      if (months > 0) {
-        return months === 1 ? '1 month ago' : `${months} months ago`;
-      }
-      
-      const days = Math.floor(timeDiff / (1000 * 60 * 60 * 24));
-      if (days > 0) {
-        return days === 1 ? '1 day ago' : `${days} days ago`;
-      }
-      
-      const hours = Math.floor(timeDiff / (1000 * 60 * 60));
-      if (hours > 0) {
-        return hours === 1 ? '1 hour ago' : `${hours} hours ago`;
-      }
-      
-      const minutes = Math.floor(timeDiff / (1000 * 60));
-      if (minutes > 0) {
-        return minutes === 1 ? '1 minute ago' : `${minutes} minutes ago`;
-      }
-      
-      return 'Just now';
-    };
-
-
+    const [successMessage, setSuccessMessage] = useState('');
 
     useEffect(() => {
         getdownload();
@@ -65,11 +30,12 @@ const Myvideo = () => {
     
         try {
           const response = await axios.post(
-            "http://16.16.91.234:3003/api/get_download_video",
+            "http://16.16.91.234:3003/api/block_user_list",
             data,
             options
           );
           setGetdownloadd(response.data.data);
+          
         } catch (err) {
           console.error(err);
         }
@@ -89,13 +55,14 @@ const Myvideo = () => {
     
         const data = JSON.stringify({
           user_id: idddd,
-          video_id: item,
+          channel_id: item,
         });
     
         axios
-          .post("http://16.16.91.234:3003/api/delete_download_video", data, options)
+          .post("http://16.16.91.234:3003/api/unblock_user", data, options)
           .then((res) => {
             getdownload();
+            setSuccessMessage('User unblocked successfully!');
           })
           .catch((err) => {
             console.error(err);
@@ -113,7 +80,11 @@ const Myvideo = () => {
                 <Sidebar/>
                 <div id="content-wrapper">
                 <div className="container-fluid">
-                <h4>My Download </h4>
+                    
+                <h4>Blocked Users </h4>
+                <font style={{color:'blue'}}>{successMessage && <p>{successMessage}</p>}</font>
+                <br/>
+                
                 <div className="video-block section-padding">
                   <div className="tab-content" id="ex1-content">
                     <div
@@ -133,13 +104,14 @@ const Myvideo = () => {
                                 marginLeft: "-6px",
                               }}
                             >
-                              <button
-                                style={{ borderRadius: "15px" }}
-                                className="fas fa-times-circle btn "
-                                onClick={() =>
-                                  removeCartitem(list.video_data._id)
-                                }
-                              ></button>
+                              
+                                
+                               
+
+                                
+                              <img  onClick={() =>
+                                removeCartitem(list.channel_id)
+                              } style={{height:'55px' , width:'50px' , background:'none'}} src='img/block.jpg'/>
                               <div
                                 className="video-card"
                                 style={{ width: "100%", borderRadius: "10px" }}
@@ -155,76 +127,47 @@ const Myvideo = () => {
                                 >
                                   <Link
                                     className="play-icon"
-                                    to="/video_page"  onClick={() => {
-                                      localStorage.setItem("videoiid", list.video_id);
-                                      localStorage.setItem("useridd", list.user_id);
-                                      localStorage.setItem(
-                                        "channelid",
-                                        list.channel_id
-                                      );
-                                      localStorage.setItem("categorytpee", list.category_type);
-                                    }}
+                                    to="#"  
                                   >
                                     <i className="fas fa-play-circle" />
                                   </Link>
-                                  <Link to="/video_page"  onClick={() => {
-                                localStorage.setItem("videoiid", list.video_id);
-                                localStorage.setItem("useridd", list.user_id);
-                                localStorage.setItem(
-                                  "channelid",
-                                  list.channel_id
-                                );
-                                localStorage.setItem("categorytpee", list.category_type);
-                              }}>
-                                    <img
+                                  <Link to="#"  >
+                                     <img
                                       className="img-fluid"
                                       src={
                                         "http://16.16.91.234:3003/uploads/" +
-                                        list.video_data.video[1].filename
+                                        list.channel_data.image[1].filename
                                       }
                                       alt
-                                    />
+                                    /> 
                                   </Link>
                                   {/* <div className="time">3:50</div> */}
                                 </div>
                                 <div className="video-card-body">
                                   <div className="video-title">
-                                    <Link to="/video_page"  onClick={() => {
-                                localStorage.setItem("videoiid", list._id);
-                                localStorage.setItem("useridd", list.user_id);
-                                localStorage.setItem(
-                                  "channelid",
-                                  list.channel_id
-                                );
-                                localStorage.setItem("categorytpee", list.category_type);
-                              }}>
-                                      {list.video_data.video_name}
+                                    <Link to="#">
+                                      {/* {list.video_data.video_name} */}
                                     </Link>
                                   </div>
                                   <div
                                     className="single-video-author box mb-3"
                                     style={{ paddingLeft: 0, paddingRight: 0 }}
                                   >
-                                    {/* <div className="float-right">
-                                      <p>
-                                        <i className="fas fa-eye" /> {list.video_data[0].video_views}
-                                      </p>
-                                      <p>
-                                        <i className="fa fa-thumbs-up" /> 131K
-                                      </p>
-                                    </div> */}
+                                    
                                     <Link onClick={() => {
                 localStorage.setItem("videoiid", list._id);
                 localStorage.setItem("useridd", list.user_id);
                 localStorage.setItem("channelid", list.channel_id);
-                localStorage.setItem("categorytpee", list.category_type);
+
               }} to="/view_profile">
                                       {" "}
                                       <img
                                         className="img-fluid"
                                         src={
                                           "http://16.16.91.234:3003/uploads/" +
-                                          list.video_data.video[1].filename
+                                          list.channel_data.image[0].filename
+
+                                          
                                         }
                                         alt
                                       />
@@ -234,15 +177,16 @@ const Myvideo = () => {
                 localStorage.setItem("videoiid", list._id);
                 localStorage.setItem("useridd", list.user_id);
                 localStorage.setItem("channelid", list.channel_id);
-                localStorage.setItem("categorytpee", list.category_type);
+
               }} to="/view_profile">
                                         <strong>
-                                          {list.video_data.channel_name}
+                                           {list.channel_data.channel_name} 
+                                          
                                         </strong>
                                       </Link>{" "}
-                                      
+                                     
                                     </p>
-                                    <p>{formatDate(list.current_date)}</p>
+                                    {/* <p>{list.current_date}</p> */}
                                   </div>
                                 </div>
                               </div>
@@ -373,4 +317,4 @@ const Myvideo = () => {
     )
 }
 
-export default Myvideo
+export default Blockuser

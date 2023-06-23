@@ -1,26 +1,131 @@
-import React from 'react'
-import Header from './Header'
-import Sidebar from './Sidebar'
-import { AiFillSetting } from 'react-icons/ai'
-import { FaRegEdit } from 'react-icons/fa'
-import { Link } from 'react-router-dom'
-import Footer from './Footer'
-import axios from 'axios'
-import { useEffect } from 'react'
-import { useState } from 'react'
+import React from "react";
+import Header from "./Header";
+import Sidebar from "./Sidebar";
+import { AiFillSetting } from "react-icons/ai";
+import { FaRegEdit } from "react-icons/fa";
+import { Link } from "react-router-dom";
+import Footer from "./Footer";
+import axios from "axios";
+import { useEffect } from "react";
+import { useState } from "react";
 
-import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
-import 'react-tabs/style/react-tabs.css';
+import { Tab, Tabs, TabList, TabPanel } from "react-tabs";
+import "react-tabs/style/react-tabs.css";
 
-import { AiOutlineDownload } from 'react-icons/ai'
-import {AiTwotoneHeart} from 'react-icons/ai'
+import { AiOutlineDownload } from "react-icons/ai";
+import { AiTwotoneHeart } from "react-icons/ai";
 
 const Myprofile = () => {
   const [lists, setLists] = useState([]);
   const [listss, setListss] = useState([]);
+
+  const [liked, setLiked] = useState([]);
+
   const [getdownloadd, setGetdownloadd] = useState([]);
   const [getcommt, setgetcomment] = useState([]);
+
+  const [getvideoplaylist, setgetvideoplaylist] = useState([]);
   const [getmyvideo, setgetmyvideo] = useState([]);
+
+const  [ getmyupload  , setGetmyupload ] = useState([]);
+const  [ getmyuploadmusic  , setGetmyuploadmusic ] = useState([]);
+
+
+const formatDate = (dateString) => {
+  const date = new Date(dateString);
+  const now = new Date();
+  
+  const timeDiff = Math.abs(now - date);
+  
+  const years = Math.floor(timeDiff / (1000 * 60 * 60 * 24 * 365));
+  if (years > 0) {
+    return years === 1 ? '1 year ago' : `${years} years ago`;
+  }
+  
+  const months = Math.floor(timeDiff / (1000 * 60 * 60 * 24 * 30));
+  if (months > 0) {
+    return months === 1 ? '1 month ago' : `${months} months ago`;
+  }
+  
+  const days = Math.floor(timeDiff / (1000 * 60 * 60 * 24));
+  if (days > 0) {
+    return days === 1 ? '1 day ago' : `${days} days ago`;
+  }
+  
+  const hours = Math.floor(timeDiff / (1000 * 60 * 60));
+  if (hours > 0) {
+    return hours === 1 ? '1 hour ago' : `${hours} hours ago`;
+  }
+  
+  const minutes = Math.floor(timeDiff / (1000 * 60));
+  if (minutes > 0) {
+    return minutes === 1 ? '1 minute ago' : `${minutes} minutes ago`;
+  }
+  
+  return 'Just now';
+};
+
+
+
+  useEffect(() => {
+    getlikevideo();
+  }, []);
+
+  const getlikevideo = async () => {
+    const idddd = localStorage.getItem("_id");
+
+    const options = {
+      headers: {
+        "content-type": "application/json; charset=utf-8",
+        "Access-Control-Allow-Origin": "*",
+      },
+    };
+
+    const data = JSON.stringify({
+      user_id: idddd,
+    });
+
+    await axios
+      .post("http://16.16.91.234:3003/api/get_like_video_list", data, options)
+      .then((res) => {
+        setLiked(res.data.data);
+      })
+      .catch((err) => {
+        console.error("API Error:", err);
+      });
+  };
+
+
+
+
+
+  const removeuploadmusic = (item) => {
+    const idddd = localStorage.getItem("_id");
+    const options = {
+      headers: {
+        "content-type": "application/json; charset=utf-8",
+        "Access-Control-Allow-Origin": "*",
+      },
+    };
+
+    const data = JSON.stringify({
+      user_id: idddd,
+      _id: item,
+    });
+
+    axios
+      .post("http://16.16.91.234:3003/api/delete_music", data, options)
+      .then((res) => {
+        getmyuploadmusics();
+      })
+      .catch((err) => {
+        console.error(err);
+      });
+  };
+
+
+
+
 
 
   const removeCartitem = (item) => {
@@ -48,53 +153,93 @@ const Myprofile = () => {
   };
 
 
-
-
-  useEffect(() => {
-    getmychannelvideo();
-  }, []);
-  
-  const getmychannelvideo = async () => {
-    const useriddd  = localStorage.getItem("useridd");
-    const channellidd = localStorage.getItem("channelid");
-    
-    console.log("singlesdasdasd channeell", channellidd);
-    console.log("singlesdasdasd userissss", useriddd);
-  
+  const removelikevideo = (item) => {
+    const idddd = localStorage.getItem("_id");
     const options = {
       headers: {
         "content-type": "application/json; charset=utf-8",
         "Access-Control-Allow-Origin": "*",
       },
     };
-  
-    const data = {
-       "channel_id": channellidd,
-      "user_id": useriddd,
-    };
-  
-    try {
-      const response = await axios.post(
-        "http://16.16.91.234:3003/api/get_my_channel_video",
-        data,
-        options
-      );
-  
-      if (Array.isArray(response.data.data)) {
-        setgetmyvideo(response.data.data);
-        console.log("response of get_my_channel_subscribe", response.data.data);
-      }
-    } catch (err) {
-      console.error("API Error:", err);
-    }
+
+    const data = JSON.stringify({
+      user_id: idddd,
+      video_id: item,
+    });
+
+    axios
+      .post("http://16.16.91.234:3003/api/delete_like_video", data, options)
+      .then((res) => {
+        getlikevideo();
+      })
+      .catch((err) => {
+        console.error(err);
+      });
   };
-  
 
 
-  
+
+  const myplaylistvideo = (item) => {
+
+    const options = {
+      headers: {
+        "content-type": "application/json; charset=utf-8",
+        "Access-Control-Allow-Origin": "*",
+      },
+    };
+
+    const data = JSON.stringify({
+      
+      _id: item,
+    });
+
+    axios
+      .post("http://16.16.91.234:3003/api/delete_my_playlist_video", data, options)
+      .then((res) => {
+        getmyplaylist();
+      })
+      .catch((err) => {
+        console.error(err);
+      });
+  };
+
+
+
+
+
+
+
+
+
+
+  const removeuploadvideo = (item) => {
+    const idddd = localStorage.getItem("_id");
+    const options = {
+      headers: {
+        "content-type": "application/json; charset=utf-8",
+        "Access-Control-Allow-Origin": "*",
+      },
+    };
+
+    const data = JSON.stringify({
+      user_id: idddd,
+      video_id: item,
+    });
+
+    axios
+      .post("http://16.16.91.234:3003/api/delete_my_video", data, options)
+      .then((res) => {
+        getmyvideos();
+      })
+      .catch((err) => {
+        console.error(err);
+      });
+  };
+
 
   useEffect(() => {
     gethistory();
+    
   }, []);
 
   const gethistory = async () => {
@@ -115,12 +260,41 @@ const Myprofile = () => {
       .post("http://16.16.91.234:3003/api/get_history", data, options)
       .then((res) => {
         setgetcomment(res.data.data);
-        
       })
       .catch((err) => {
         console.error("API Error:", err);
       });
   };
+
+
+  useEffect(() => {
+    getmyplaylist();
+  }, []);
+
+  const getmyplaylist = async () => {
+    const idddd = localStorage.getItem("_id");
+
+    const options = {
+      headers: {
+        "content-type": "application/json; charset=utf-8",
+        "Access-Control-Allow-Origin": "*",
+      },
+    };
+
+    const data = JSON.stringify({
+      user_id: idddd,
+    });
+
+    await axios
+      .post("http://16.16.91.234:3003/api/get_my_playlist", data, options)
+      .then((res) => {
+        setgetvideoplaylist(res.data.data);
+      })
+      .catch((err) => {
+        console.error("API Error:", err);
+      });
+  };
+
 
 
 
@@ -150,45 +324,38 @@ const Myprofile = () => {
         data,
         options
       );
-      setGetdownloadd(response.data.data)
-
-
-
+      setGetdownloadd(response.data.data);
+      console.log("response of download",response.data.data)
     } catch (err) {
       console.error(err);
     }
   };
-
-
-
-
-
 
   useEffect(() => {
     getHomeData2();
   }, []);
 
   const getHomeData2 = async () => {
-    const userid = localStorage.getItem("useridd");
-  
+    const userid = localStorage.getItem("_id");
+
     const options = {
       headers: {
         "content-type": "application/json; charset=utf-8",
         "Access-Control-Allow-Origin": "*",
       },
     };
-  
+
     const data = {
       user_id: userid,
     };
-  
+
     try {
       const response = await axios.post(
         "http://16.16.91.234:3003/api/get_my_channel",
         data,
         options
       );
-  
+
       if (response.data.data && response.data.data.length > 0) {
         const channelName = response.data.data[0].channel_name;
         const channelid = response.data.data[0]._id;
@@ -201,15 +368,13 @@ const Myprofile = () => {
     }
   };
 
-
-
   useEffect(() => {
     get_subscribe();
   }, []);
 
   const get_subscribe = async () => {
     const userid = localStorage.getItem("_id");
-    console.log("usertdddd",userid)
+    console.log("usertdddd", userid);
 
     const options = {
       headers: {
@@ -229,10 +394,50 @@ const Myprofile = () => {
         options
       );
 
-      if (response.data.data && response.data.data.length > 0)
-       {
+      if (response.data.data && response.data.data.length > 0) {
         setListss(response.data.data);
-        console.log("response checkinggg",response.data.data)
+        
+      }
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+
+  useEffect(() => {
+    getmyvideos();
+  }, []);
+
+  const getmyvideos = async () => {
+    const userid = localStorage.getItem("_id");
+    const chanelid = localStorage.getItem("channel_id");
+
+    
+    console.log("usertdddd", userid);
+
+    const options = {
+      headers: {
+        "content-type": "application/json; charset=utf-8",
+        "Access-Control-Allow-Origin": "*",
+      },
+    };
+
+    const data = {
+      "user_id": userid,
+      "channel_id":chanelid,
+
+    };
+
+    try {
+      const response = await axios.post(
+        "http://16.16.91.234:3003/api/get_my_channel_video",
+        data,
+        options
+      );
+
+      if (response.data.data && response.data.data.length > 0) {
+        setGetmyupload(response.data.data);
+        
       }
     } catch (err) {
       console.error(err);
@@ -241,37 +446,90 @@ const Myprofile = () => {
 
 
 
-  
+
+  useEffect(() => {
+    getmyuploadmusics();
+  }, []);
+
+  const getmyuploadmusics = async () => {
+    const userid = localStorage.getItem("_id");
+    //const chanelid = localStorage.getItem("channel_id");
+
+    
+
+
+    const options = {
+      headers: {
+        "content-type": "application/json; charset=utf-8",
+        "Access-Control-Allow-Origin": "*",
+      },
+    };
+
+    const data = {
+      "user_id": userid,
+      //"channel_id":chanelid,
+
+    };
+
+    try {
+      const response = await axios.post(
+        "http://16.16.91.234:3003/api/get_audio",
+        data,
+        options
+      );
+
+      if (response.data.data && response.data.data.length > 0) {
+        setGetmyuploadmusic(response.data.data);
+        
+      }
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+
 
   return (
     <>
- <Header />
+      <Header />
       <Sidebar />
       <div>
         <div className="single-channel-page" id="content-wrapper">
           <div className="single-channel-image">
-            {lists.length > 0 && lists[0].image && lists[0].image[0] && lists[0].image[0].filename ? (
+            {lists.length > 0 &&
+            lists[0].image &&
+            lists[0].image[0] &&
+            lists[0].image[0].filename ? (
               <img
-                style={{ height: '250px' }}
+                style={{ height: "250px" }}
                 className="img-fluid"
                 alt="Channel Image"
-                src={"http://16.16.91.234:3003/uploads/" + lists[0].image[0].filename}
+                src={
+                  "http://16.16.91.234:3003/uploads/" +
+                  lists[0].image[0].filename
+                }
               />
             ) : (
               <img
-                style={{ height: '250px' }}
+                style={{ height: "250px" }}
                 className="img-fluid"
                 alt="Channel Image"
-                src="img/logo.png" // Replace with your default image URL
+                src="img/logo.png"
               />
             )}
 
             <div className="channel-profile">
-              {lists.length > 0 && lists[0].image && lists[0].image[1] && lists[0].image[1].filename ? (
+              {lists.length > 0 &&
+              lists[0].image &&
+              lists[0].image[1] &&
+              lists[0].image[1].filename ? (
                 <img
                   className="channel-profile-img"
                   alt="Avatar"
-                  src={"http://16.16.91.234:3003/uploads/" + lists[0].image[1].filename}
+                  src={
+                    "http://16.16.91.234:3003/uploads/" +
+                    lists[0].image[1].filename
+                  }
                 />
               ) : (
                 <img
@@ -283,735 +541,1486 @@ const Myprofile = () => {
 
               <div className="social hidden-xs">
                 <Link to="/setting">
-                  <AiFillSetting style={{ fontSize: 35, color: 'white' }} />
+                  <AiFillSetting style={{ fontSize: 35, color: "white" }} />
                 </Link>
                 <a href>
-                  <FaRegEdit style={{ fontSize: 35, color: 'white' }} />
+                  <FaRegEdit style={{ fontSize: 35, color: "white" }} />
                 </a>
               </div>
-           
-          
-        </div>
+            </div>
           </div>
 
           <Tabs className="mt-2">
             {lists.length > 0 && (
-              <a style={{ marginLeft: "15px" }} className="channel-brand" href="#">
+              <a
+                style={{ marginLeft: "15px" }}
+                className="channel-brand"
+                href="#"
+              >
                 {lists[0].channel_name}{" "}
-                <span
-                  title
-                  data-placement="top"
-                  data-toggle="tooltip"
-                  data-original-title="Verified"
-                >
-                  <i className="fas fa-check-circle text-success" />
-                </span>
-              </a>
-            )}
+               
+              </a> 
+            )}   <button
+             style={{ float:'right'}}
+            className="btn-danger"
+            type="button"
+          >
+            Subscribe <strong>1.4M</strong>
+          </button>
             <hr />
 
             <TabList className="single-channel-nav p-3">
-              <Tab style={{ marginLeft: "20px" }}>My-Download</Tab>
-              <Tab style={{ marginLeft: "20px" }}>My Liked Video</Tab>
-              <Tab style={{ marginLeft: "20px" }}>History</Tab>
-              <Tab style={{ marginLeft: "20px" }}>My Subscribe</Tab>
-              <Tab style={{ marginLeft: "20px" }}>My Videos</Tab>
-              <button style={{ marginLeft: "20px" }} className="btn-danger" type="button">
-                Subscribe <strong>1.4M</strong>
-              </button>
-            </TabList>
 
-           
+            <Tab style={{ marginLeft: "15px" }}>My-Uploads Videos</Tab>              
+            <Tab style={{ marginLeft: "15px" }}>My-Uploads Music</Tab>
+            <Tab style={{ marginLeft: "15px" }}>Video Playlist</Tab>  
+              <Tab style={{ marginLeft: "15px" }}>My-Download</Tab>
+              <Tab style={{ marginLeft: "15px" }}>My Liked Video</Tab>
+              <Tab style={{ marginLeft: "15px" }}>History</Tab>
+              <Tab style={{ marginLeft: "15px" }}>My Subscribe</Tab>
+              {/* <Tab style={{ marginLeft: "20px" }}>My Videos</Tab> */}
+             
+            </TabList>
 
             <TabPanel>
               <div className="container-fluid">
-                <h4>My Download  </h4>
+                <h4>My Upload Video </h4>
                 <div className="video-block section-padding">
                   <div className="tab-content" id="ex1-content">
-                    <div className="tab-pane fade show active" id="ex1-tabs-1" role="tabpanel" aria-labelledby="ex1-tab-1">
+                    <div
+                      className="tab-pane fade show active"
+                      id="ex1-tabs-1"
+                      role="tabpanel"
+                      aria-labelledby="ex1-tab-1"
+                    >
                       <div className="row">
-                 
-                            {getdownloadd && getdownloadd.length > 0 ? (
-                              getdownloadd.map((list) => (
+                        {getmyupload && getmyupload.length > 0 ? (
+                          getmyupload.map((list) => (
+                            <div
+                              className="col-sm-4 mb-4  "
+                              style={{
+                                borderRadius: "10px",
+                                width: "100%",
+                                marginLeft: "-6px",
+                              }}
+                            >
+                              <button
+                                style={{ borderRadius: "15px" }}
+                                className="fas fa-times-circle btn "
+                                onClick={() =>
+                                  removeuploadvideo(list._id)
+                                }
+                              ></button>
+                              <div
+                                className="video-card"
+                                style={{ width: "100%", borderRadius: "10px" }}
+                              >
 
-
-                            <div className='col-sm-4 mb-4  ' style={{borderRadius:"10px" ,width:'100%', marginLeft:'-6px' }} >
-        
-                            <div className="video-card"  style={{  width:'100%' , borderRadius:'10px' }}>
-                            
-
-                            <button style={{borderRadius:'15px' }}
-                                    className="fas fa-times-circle btn "
-                                    onClick={() => removeCartitem(list.video_data._id)}
-                                  ></button>
-                              
-                              <div className="video-card-image" style={{ borderRadius: '10px',width:'100%', height: '160px' }}>
-                              <a className="play-icon" href="video-page.html"><i className="fas fa-play-circle" /></a>
-                              <a href="video-page.html"><img className="img-fluid" src={
-                                  "http://16.16.91.234:3003/uploads/" +
-                                  list.video_data.video[1].filename
-                                } alt /></a>
-                              <div className="time">3:50</div>
-                            </div>
-                            <div className="video-card-body">
-                              <div className="video-title">
-                                <a href="video-page.html">{list.video_data.video_name}</a>
-                              </div>
-                              <div className="single-video-author box mb-3" style={{ paddingLeft: 0, paddingRight: 0 }}>
-                                <div className="float-right">
-                                  <p><i className="fas fa-eye" /> 10.4M</p>
-                                  <p><i className="fa fa-thumbs-up" /> 131K</p>
+                                <div
+                                  className="video-card-image"
+                                  style={{
+                                    borderRadius: "10px",
+                                    width: "100%",
+                                    height: "160px",
+                                  }}
+                                >
+                                  <Link  onClick={() => {
+                                localStorage.setItem("videoiid", list._id);
+                                localStorage.setItem("useridd", list.user_id);
+                                localStorage.setItem(
+                                  "channelid",
+                                  list.channel_id
+                                );
+                                localStorage.setItem(
+                                  "categorytpee",
+                                  list.category_type
+                                );
+                              }}
+                                    className="play-icon"
+                                    to="/video_page"
+                                  >
+                                    
+                                    <i className="fas fa-play-circle" />
+                                  </Link>
+                                  <Link to="/video_page"  onClick={() => {
+                                localStorage.setItem("videoiid", list._id);
+                                localStorage.setItem("useridd", list.user_id);
+                                localStorage.setItem(
+                                  "channelid",
+                                  list.channel_id
+                                );
+                              }}>
+                                    <img
+                                      className="img-fluid"
+                                      src={
+                                        "http://16.16.91.234:3003/uploads/" +
+                                        list.video[1].filename
+                                      }
+                                      alt
+                                    />
+                                  </Link>
+                                  
                                 </div>
-                                <a href="viewprofile.html"> <img className="img-fluid" src={
-                                  "http://16.16.91.234:3003/uploads/" +
-                                  list.video_data.video[1].filename
-                                } alt /></a>
-                                <p><a href="viewprofile.html"><strong>{list.video_data.channel_name}</strong></a> <span title data-placement="top" data-toggle="tooltip" data-original-title="Verified"><i className="fas fa-check-circle text-success" /></span></p>
-                                <p>3 Months ago</p>
+                                <div className="video-card-body">
+                                  <div className="video-title">
+                                    <Link to="/video_page">
+                                      {list.video_name}
+                                    </Link>
+                                  </div>
+                                  <div
+                                    className="single-video-author box mb-3"
+                                    style={{ paddingLeft: 0, paddingRight: 0 }}
+                                  >
+                                    <div className="float-right">
+                                      <p>
+                                        <i className="fas fa-eye" /> {list.video_views}
+                                      </p>
+                                      <p>
+                                        <i className="fa fa-thumbs-up" /> {list.video_likes}
+                                      </p>
+                                    </div>
+                                    <Link onClick={() => {
+                localStorage.setItem("videoiid", list._id);
+                localStorage.setItem("useridd", list.user_id);
+                localStorage.setItem("channelid", list.channel_id);
+              }} to="/view_profile">
+                                      {" "}
+                                      <img
+                                        className="img-fluid"
+                                        src={
+                                          "http://16.16.91.234:3003/uploads/" +
+                                          list.video[1].filename
+                                        }
+                                        alt
+                                      />
+                                    </Link>
+                                    <p>
+                                      <Link onClick={() => {
+                localStorage.setItem("videoiid", list._id);
+                localStorage.setItem("useridd", list.user_id);
+                localStorage.setItem("channelid", list.channel_id);
+              }} to="/view_profile">
+                                        <strong>
+                                          {list.channel_name}
+                                        </strong>
+                                      </Link>{" "}
+                                      
+                                    </p>
+                                    <p>{formatDate(list.current_date)}</p>
+                                  </div>
+                                </div>
                               </div>
                             </div>
-                          </div>
-                        </div>
-                       ))
-                       ) : (
-                         <div className="col-md-12">No Data found.</div>
-                       )}
+                          ))
+                        ) : (
+                          <div className="col-md-12">No Data found.</div>
+                        )}
                       </div>
                     </div>
 
-
-
-                    <div className="tab-pane fade" id="ex1-tabs-3" role="tabpanel" aria-labelledby="ex1-tab-3">
-                      <div className="col-xl-3 col-sm-6 mb-3" style={{ paddingLeft: 10, paddingRight: 0 }}>
+                    <div
+                      className="tab-pane fade"
+                      id="ex1-tabs-3"
+                      role="tabpanel"
+                      aria-labelledby="ex1-tab-3"
+                    >
+                      <div
+                        className="col-xl-3 col-sm-6 mb-3"
+                        style={{ paddingLeft: 10, paddingRight: 0 }}
+                      >
                         <div className="video-card">
-                          <div className="video-card-image" style={{ borderRadius: 15 }}>
-                            <a className="play-icon" href="video-page.html"><i className="fas fa-play-circle" /></a>
-                            <a href="video-page.html"><img className="img-fluid" src="img/v1.png" alt /></a>
+                          <div
+                            className="video-card-image"
+                            style={{ borderRadius: 15 }}
+                          >
+                            <a className="play-icon" href="video-page.html">
+                              <i className="fas fa-play-circle" />
+                            </a>
                             <a href="video-page.html">
-                              <div className="time" style={{ bottom: 0, right: 0 }}>
-                                <h3 style={{ position: 'relative', top: 35, left: 25 }}>10</h3>
-                                <svg viewBox="0 0 24 24" preserveAspectRatio="xMidYMid meet" focusable="false" className="style-scope yt-icon" style={{ pointerEvents: 'none', display: 'block', width: 100, height: 120 }}><g className="style-scope yt-icon">sddfdf<path d="M22,7H2v1h20V7z M13,12H2v-1h11V12z M13,16H2v-1h11V16z M15,19v-8l7,4L15,19z" className="style-scope yt-icon" /></g></svg>
+                              <img className="img-fluid" src="img/v1.png" alt />
+                            </a>
+                            <a href="video-page.html">
+                              <div
+                                className="time"
+                                style={{ bottom: 0, right: 0 }}
+                              >
+                                <h3
+                                  style={{
+                                    position: "relative",
+                                    top: 35,
+                                    left: 25,
+                                  }}
+                                >
+                                  10
+                                </h3>
+                                <svg
+                                  viewBox="0 0 24 24"
+                                  preserveAspectRatio="xMidYMid meet"
+                                  focusable="false"
+                                  className="style-scope yt-icon"
+                                  style={{
+                                    pointerEvents: "none",
+                                    display: "block",
+                                    width: 100,
+                                    height: 120,
+                                  }}
+                                >
+                                  <g className="style-scope yt-icon">
+                                    sddfdf
+                                    <path
+                                      d="M22,7H2v1h20V7z M13,12H2v-1h11V12z M13,16H2v-1h11V16z M15,19v-8l7,4L15,19z"
+                                      className="style-scope yt-icon"
+                                    />
+                                  </g>
+                                </svg>
                               </div>
                             </a>
                           </div>
                           <div className="video-card-body">
                             <div className="video-title">
-                              <a href="video-page.html">There are many variations of passages of
-                                Lorem</a>
+                              <a href="video-page.html">
+                                There are many variations of passages of Lorem
+                              </a>
                             </div>
-                            <div className="single-video-author box mb-3" style={{ paddingLeft: 0, paddingRight: 0 }}>
+                            <div
+                              className="single-video-author box mb-3"
+                              style={{ paddingLeft: 0, paddingRight: 0 }}
+                            >
                               <div className="float-right">
-                                <p><i className="fas fa-eye" /> 10.4M</p>
-                                <p><i className="fa fa-thumbs-up" /> 131K</p>
+                                <p>
+                                  <i className="fas fa-eye" /> 10.4M
+                                </p>
+                                <p>
+                                  <i className="fa fa-thumbs-up" /> 131K
+                                </p>
                               </div>
-                              <a href="viewprofile.html"> <img className="img-fluid" src="img/s4.png" alt /></a>
-                              <p><a href="viewprofile.html"><strong>History</strong></a> <span title data-placement="top" data-toggle="tooltip" data-original-title="Verified"><i className="fas fa-check-circle text-success" /></span></p>
+                              <a href="viewprofile.html">
+                                {" "}
+                                <img
+                                  className="img-fluid"
+                                  src="img/s4.png"
+                                  alt
+                                />
+                              </a>
+                              <p>
+                                <a href="viewprofile.html">
+                                  <strong>History</strong>
+                                </a>{" "}
+                                
+                              </p>
                               <p>3 Months ago</p>
                             </div>
                           </div>
                         </div>
                       </div>
                     </div>
-
-
-
-
-
-
                   </div>
-                  <nav aria-label="Page navigation example">
-                    <ul className="pagination justify-content-center pagination-sm mb-0">
-                      <li className="page-item disabled">
-                        <a tabIndex={-1} href="#" className="page-link">Previous</a>
-                      </li>
-                      <li className="page-item active"><a href="#" className="page-link">1</a></li>
-                      <li className="page-item"><a href="#" className="page-link">2</a></li>
-                      <li className="page-item"><a href="#" className="page-link">3</a></li>
-                      <li className="page-item">
-                        <a href="#" className="page-link">Next</a>
-                      </li>
-                    </ul>
-                  </nav>
+                  
+                </div>
+              </div>
+            </TabPanel>
+
+             <TabPanel>
+              <div className="container-fluid">
+                <h4>My Upload Music  </h4>
+                <div className="video-block section-padding">
+                  <div className="tab-content" id="ex1-content">
+                    <div
+                      className="tab-pane fade show active"
+                      id="ex1-tabs-1"
+                      role="tabpanel"
+                      aria-labelledby="ex1-tab-1"
+                    >
+                      <div className="row">
+                        {getmyuploadmusic && getmyuploadmusic.length > 0 ? (
+                          getmyuploadmusic.map((list) => (
+                            <div
+                              className="col-sm-4 mb-4  "
+                              style={{
+                                borderRadius: "10px",
+                                width: "100%",
+                                marginLeft: "-6px",
+                              }}
+                            >
+                              <button
+                                style={{ borderRadius: "15px" }}
+                                className="fas fa-times-circle btn "
+                                onClick={() =>
+                                  removeuploadmusic(list._id)
+                                }
+                              ></button>
+                              <div
+                                className="video-card"
+                                style={{ width: "100%", borderRadius: "10px" }}
+                              >
+
+                                <div
+                                  className="video-card-image"
+                                  style={{
+                                    borderRadius: "10px",
+                                    width: "100%",
+                                    height: "160px",
+                                  }}
+                                >
+                                  <Link
+                                    className="play-icon"
+                                    onClick={() => {
+                                      localStorage.setItem("getsingleaudio", list._id); }} to="/audio">
+                                  
+                                    <i className="fas fa-play-circle" />
+                                  </Link>
+                                  <Link onClick={() => {
+              localStorage.setItem("getsingleaudio", list._id); }} to="/audio">
+                                    <img
+                                      className="img-fluid"
+                                      src='img/logo.png'
+                                      alt
+                                    />
+                                  </Link>
+                                  
+                                </div>
+                                <div className="video-card-body">
+                                  <div className="video-title">
+                                    <a href="video-page.html">
+                                      {list.music_title}
+                                    </a>
+                                  </div>
+                                 
+                                </div>
+                              </div>
+                            </div>
+                          ))
+                        ) : (
+                          <div className="col-md-12">No Data found.</div>
+                        )}
+                      </div>
+                    </div>
+
+                    <div
+                      className="tab-pane fade"
+                      id="ex1-tabs-3"
+                      role="tabpanel"
+                      aria-labelledby="ex1-tab-3"
+                    >
+                      <div
+                        className="col-xl-3 col-sm-6 mb-3"
+                        style={{ paddingLeft: 10, paddingRight: 0 }}
+                      >
+                        <div className="video-card">
+                          <div
+                            className="video-card-image"
+                            style={{ borderRadius: 15 }}
+                          >
+                            <a className="play-icon" href="video-page.html">
+                              <i className="fas fa-play-circle" />
+                            </a>
+                            <a href="video-page.html">
+                              <img className="img-fluid" src="img/v1.png" alt />
+                            </a>
+                            <a href="video-page.html">
+                              <div
+                                className="time"
+                                style={{ bottom: 0, right: 0 }}
+                              >
+                                <h3
+                                  style={{
+                                    position: "relative",
+                                    top: 35,
+                                    left: 25,
+                                  }}
+                                >
+                                  10
+                                </h3>
+                                <svg
+                                  viewBox="0 0 24 24"
+                                  preserveAspectRatio="xMidYMid meet"
+                                  focusable="false"
+                                  className="style-scope yt-icon"
+                                  style={{
+                                    pointerEvents: "none",
+                                    display: "block",
+                                    width: 100,
+                                    height: 120,
+                                  }}
+                                >
+                                  <g className="style-scope yt-icon">
+                                    sddfdf
+                                    <path
+                                      d="M22,7H2v1h20V7z M13,12H2v-1h11V12z M13,16H2v-1h11V16z M15,19v-8l7,4L15,19z"
+                                      className="style-scope yt-icon"
+                                    />
+                                  </g>
+                                </svg>
+                              </div>
+                            </a>
+                          </div>
+                          <div className="video-card-body">
+                            <div className="video-title">
+                              <a href="video-page.html">
+                                There are many variations of passages of Lorem
+                              </a>
+                            </div>
+                            <div
+                              className="single-video-author box mb-3"
+                              style={{ paddingLeft: 0, paddingRight: 0 }}
+                            >
+                              <div className="float-right">
+                                <p>
+                                  <i className="fas fa-eye" /> 10.4M
+                                </p>
+                                <p>
+                                  <i className="fa fa-thumbs-up" /> 131K
+                                </p>
+                              </div>
+                              <a href="viewprofile.html">
+                                {" "}
+                                <img
+                                  className="img-fluid"
+                                  src="img/s4.png"
+                                  alt
+                                />
+                              </a>
+                              <p>
+                                <a href="viewprofile.html">
+                                  <strong>History</strong>
+                                </a>{" "}
+                                <span
+                                  title
+                                  data-placement="top"
+                                  data-toggle="tooltip"
+                                  data-original-title="Verified"
+                                >
+                                  <i className="fas fa-check-circle text-success" />
+                                </span>
+                              </p>
+                              <p>3 Months ago</p>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                
+                </div>
+              </div>
+            </TabPanel> 
+
+            <TabPanel>
+              <div className="container-fluid">
+                <h4>My Video Playlist</h4>
+                <div className="video-block section-padding">
+                  <div className="tab-content" id="ex1-content">
+                    <div
+                      className="tab-pane fade show active"
+                      id="ex1-tabs-1"
+                      role="tabpanel"
+                      aria-labelledby="ex1-tab-1"
+                    >
+                      <div className="row">
+                        {getvideoplaylist && getvideoplaylist.length > 0 ? (
+                          getvideoplaylist.map((list) => (
+                            <div
+                              className="col-sm-4 mb-4  "
+                              style={{
+                                borderRadius: "10px",
+                                width: "100%",
+                                marginLeft: "-6px",
+                              }}
+                            >
+                              <button
+                                style={{ borderRadius: "15px" }}
+                                className="fas fa-times-circle btn "
+                                onClick={() =>
+                                  myplaylistvideo(list._id)
+                                }
+                              ></button>
+                              <div
+                                className="video-card"
+                                style={{ width: "100%", borderRadius: "10px" }}
+                              >
+
+                                <div
+                                  className="video-card-image"
+                                  style={{
+                                    borderRadius: "10px",
+                                    width: "100%",
+                                    height: "160px",
+                                  }}
+                                >
+                                  <Link
+                                    className="play-icon"
+                                    to='/videoplaylist'
+                                    
+                                    onClick={() => {
+                                      localStorage.setItem(
+                                        "getsinglevideo",
+                                        list._id)}}
+                                  >
+                                    <i className="fas fa-play-circle" />
+                                  </Link>
+                                  <Link  to='/videoplaylist'
+                                    
+                                    onClick={() => {
+                                      localStorage.setItem(
+                                        "getsinglevideo",
+                                        list._id)}}>
+                                    <img
+                                      className="img-fluid"
+                                     
+
+                                      src={list.image && list.image.filename ? "http://16.16.91.234:3003/uploads/" + list.image.filename : ""}
+                                      alt
+                                    />
+                                  </Link>
+                                  
+                                </div>
+                                <div className="video-card-body">
+                                  <div className="video-title">
+                                    <Link  to='/videoplaylist'
+                                    
+                                    onClick={() => {
+                                      localStorage.setItem(
+                                        "getsinglevideo",
+                                        list._id)}}>
+                                      {list.name}
+                                    </Link>
+                                  </div>
+                                 
+                                </div>
+                              </div>
+                            </div>
+                          ))
+                        ) : (
+                          <div className="col-md-12">No Data found.</div>
+                        )}
+                      </div>
+                    </div>
+
+                    <div
+                      className="tab-pane fade"
+                      id="ex1-tabs-3"
+                      role="tabpanel"
+                      aria-labelledby="ex1-tab-3"
+                    >
+                      <div
+                        className="col-xl-3 col-sm-6 mb-3"
+                        style={{ paddingLeft: 10, paddingRight: 0 }}
+                      >
+                        <div className="video-card">
+                          <div
+                            className="video-card-image"
+                            style={{ borderRadius: 15 }}
+                          >
+                            <a className="play-icon" href="video-page.html">
+                              <i className="fas fa-play-circle" />
+                            </a>
+                            <a href="video-page.html">
+                              <img className="img-fluid" src="img/v1.png" alt />
+                            </a>
+                            <a href="video-page.html">
+                              <div
+                                className="time"
+                                style={{ bottom: 0, right: 0 }}
+                              >
+                                <h3
+                                  style={{
+                                    position: "relative",
+                                    top: 35,
+                                    left: 25,
+                                  }}
+                                >
+                                  10
+                                </h3>
+                                <svg
+                                  viewBox="0 0 24 24"
+                                  preserveAspectRatio="xMidYMid meet"
+                                  focusable="false"
+                                  className="style-scope yt-icon"
+                                  style={{
+                                    pointerEvents: "none",
+                                    display: "block",
+                                    width: 100,
+                                    height: 120,
+                                  }}
+                                >
+                                  <g className="style-scope yt-icon">
+                                    sddfdf
+                                    <path
+                                      d="M22,7H2v1h20V7z M13,12H2v-1h11V12z M13,16H2v-1h11V16z M15,19v-8l7,4L15,19z"
+                                      className="style-scope yt-icon"
+                                    />
+                                  </g>
+                                </svg>
+                              </div>
+                            </a>
+                          </div>
+                          <div className="video-card-body">
+                            <div className="video-title">
+                              <a href="video-page.html">
+                                There are many variations of passages of Lorem
+                              </a>
+                            </div>
+                            <div
+                              className="single-video-author box mb-3"
+                              style={{ paddingLeft: 0, paddingRight: 0 }}
+                            >
+                              <div className="float-right">
+                                <p>
+                                  <i className="fas fa-eye" /> 10.4M
+                                </p>
+                                <p>
+                                  <i className="fa fa-thumbs-up" /> 131K
+                                </p>
+                              </div>
+                              <a href="viewprofile.html">
+                                {" "}
+                                <img
+                                  className="img-fluid"
+                                  src="img/s4.png"
+                                  alt
+                                />
+                              </a>
+                              <p>
+                                <a href="viewprofile.html">
+                                  <strong>History</strong>
+                                </a>{" "}
+                                <span
+                                  title
+                                  data-placement="top"
+                                  data-toggle="tooltip"
+                                  data-original-title="Verified"
+                                >
+                                  <i className="fas fa-check-circle text-success" />
+                                </span>
+                              </p>
+                              <p>3 Months ago</p>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  
                 </div>
               </div>
             </TabPanel>
             <TabPanel>
-            <div id="content-wrapper">
+              <div className="container-fluid">
+                <h4>My Download </h4>
+                <div className="video-block section-padding">
+                  <div className="tab-content" id="ex1-content">
+                    <div
+                      className="tab-pane fade show active"
+                      id="ex1-tabs-1"
+                      role="tabpanel"
+                      aria-labelledby="ex1-tab-1"
+                    >
+                      <div className="row">
+                        {getdownloadd && getdownloadd.length > 0 ? (
+                          getdownloadd.map((list) => (
+                            <div
+                              className="col-sm-4 mb-4  "
+                              style={{
+                                borderRadius: "10px",
+                                width: "100%",
+                                marginLeft: "-6px",
+                              }}
+                            >
+                              <button
+                                style={{ borderRadius: "15px" }}
+                                className="fas fa-times-circle btn "
+                                onClick={() =>
+                                  removeCartitem(list.video_data._id)
+                                }
+                              ></button>
+                              
+                              <div
+                                className="video-card"
+                                style={{ width: "100%", borderRadius: "10px" }}
+                              >
+
+                                <div
+                                  className="video-card-image"
+                                  style={{
+                                    borderRadius: "10px",
+                                    width: "100%",
+                                    height: "160px",
+                                  }}
+                                >
+                                 
 
 
-<div className="container-fluid pb-0">
+<Link  onClick={() => {
+                                localStorage.setItem("videoiid", list.video_id);
+                                localStorage.setItem("useridd", list.user_id);
+                                localStorage.setItem(
+                                  "channelid",
+                                  list.channel_id
+                                );
+                                localStorage.setItem("categorytpee", list.video_data.category_type);
+                              }}
+                                    className="play-icon"
+                                    to="/video_page"
+                                  >
+                                    <i className="fas fa-play-circle" />
+                                  </Link>
+                                  <Link to="/video_page"  onClick={() => {
+                                localStorage.setItem("videoiid", list.video_id);
+                                localStorage.setItem("useridd", list.user_id);
+                                localStorage.setItem(
+                                  "channelid",
+                                  list.channel_id
+                                );
+                                localStorage.setItem("categorytpee", list.video_data.category_type);
+                              }}>
 
-    <div className="top-category section-padding mb-4">
-        <div className="row">
-            <div className="col-md-12">
-                <div className="main-title row">
-                    <div className="col-xl-3 col-sm-6 mb-3" style={{ paddingLeft: 10, paddingRight: 0 }}>
-                        <div className="video-card">
-                            <div className="video-card-image" style={{ borderRadius: 15 }}>
-                                <a className="play-icon" href="video-page.html"><i className="fas fa-play-circle" /></a>
-                                <a href="video-page.html"><img className="img-fluid" src="img/v2.png" alt /></a>
-                                <div className="time">3:50</div>
-                            </div>
-                            <div className="video-card-body">
-                                <div className="video-title">
-                                    <a href="video-page.html">Just For You Gregory
-                                        </a>
+
+                                    <img
+                                      className="img-fluid"
+                                      src={
+                                        "http://16.16.91.234:3003/uploads/" +
+                                        list.video_data.video[1].filename
+                                      }
+                                      alt
+                                    />
+                                  </Link>
+                                  {/* <div className="time">3:50</div> */}
                                 </div>
-                                <div className="single-video-author box mb-3" style={{ paddingLeft: 0, paddingRight: 0 }}>
-                                    <div className="float-right">
-                                        <p className='pr-1'><i className="fas fa-eye" /> 10.4M</p>
-                                        <p><AiTwotoneHeart style={{color:"red",float:"right",fontSize:"20px"}}/></p>
-                                    </div>
-                                    <a href="viewprofile.html"> <img className="img-fluid" src="img/s4.png" alt /></a>
-                                    <p><a href="viewprofile.html"><strong>History</strong></a> <span title data-placement="top" data-toggle="tooltip" data-original-title="Verified"><i className="fas fa-check-circle text-success" /></span></p>
-                                    <p>3 Months ago</p>
+                                <div className="video-card-body">
+                                  <div className="video-title">
+                                    <Link to="/video_page"  onClick={() => {
+                                localStorage.setItem("videoiid", list._id);
+                                localStorage.setItem("useridd", list.user_id);
+                                localStorage.setItem(
+                                  "channelid",
+                                  list.channel_id
+                                );
+                                localStorage.setItem("categorytpee", list.video_data.category_type);
+                              }}>
+                                      {list.video_data.video_name}
+                                    </Link>
+                                  </div>
+                                  <div
+                                    className="single-video-author box mb-3"
+                                    style={{ paddingLeft: 0, paddingRight: 0 }}
+                                  >
+                                    
+                                    <Link onClick={() => {
+                localStorage.setItem("videoiid", list._id);
+                localStorage.setItem("useridd", list.user_id);
+                localStorage.setItem("channelid", list.channel_id);
+                localStorage.setItem("categorytpee", list.video_data.category_type);
+              }} to="/view_profile">
+                                      {" "}
+                                      <img
+                                        className="img-fluid"
+                                        src={
+                                          "http://16.16.91.234:3003/uploads/" +
+                                          list.video_data.video[1].filename
+                                        }
+                                        alt
+                                      />
+                                    </Link>
+                                    <p>
+                                      <Link onClick={() => {
+                localStorage.setItem("videoiid", list._id);
+                localStorage.setItem("useridd", list.user_id);
+                localStorage.setItem("channelid", list.channel_id);
+                localStorage.setItem("categorytpee", list.video_data.category_type);
+              }} to="/view_profile">
+                                        <strong>
+                                          {list.video_data.channel_name}
+                                        </strong>
+                                      </Link>{" "}
+                                     
+                                    </p>
+                                    <p>{formatDate(list.current_date)}</p>
+                                  </div>
                                 </div>
+                              </div>
                             </div>
-                        </div>
-                    </div>
-                    <div className="col-xl-3 col-sm-6 mb-3" style={{ paddingLeft: 10, paddingRight: 0 }}>
-                        <div className="video-card">
-                            <div className="video-card-image" style={{ borderRadius: 15 }}>
-                                <a className="play-icon" href="video-page.html"><i className="fas fa-play-circle" /></a>
-                                <a href="video-page.html"><img className="img-fluid" src="img/v2.png" alt /></a>
-                                <div className="time">3:50</div>
-                            </div>
-                            <div className="video-card-body">
-                                <div className="video-title">
-                                    <a href="video-page.html">Just For You Gregory
-                                        </a>
-                                </div>
-                                <div className="single-video-author box mb-3" style={{ paddingLeft: 0, paddingRight: 0 }}>
-                                    <div className="float-right">
-                                        <p className='pr-1'><i className="fas fa-eye" /> 10.4M</p>
-                                        <p><AiTwotoneHeart style={{color:"red",float:"right",fontSize:"20px"}}/></p>
-                                    </div>
-                                    <a href="viewprofile.html"> <img className="img-fluid" src="img/s4.png" alt /></a>
-                                    <p><a href="viewprofile.html"><strong>History</strong></a> <span title data-placement="top" data-toggle="tooltip" data-original-title="Verified"><i className="fas fa-check-circle text-success" /></span></p>
-                                    <p>3 Months ago</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div className="col-xl-3 col-sm-6 mb-3" style={{ paddingLeft: 10, paddingRight: 0 }}>
-                        <div className="video-card">
-                            <div className="video-card-image" style={{ borderRadius: 15 }}>
-                                <a className="play-icon" href="video-page.html"><i className="fas fa-play-circle" /></a>
-                                <a href="video-page.html"><img className="img-fluid" src="img/v2.png" alt /></a>
-                                <div className="time">3:50</div>
-                            </div>
-                            <div className="video-card-body">
-                                <div className="video-title">
-                                    <a href="video-page.html">Just For You Gregory
-                                        </a>
-                                </div>
-                                <div className="single-video-author box mb-3" style={{ paddingLeft: 0, paddingRight: 0 }}>
-                                    <div className="float-right">
-                                        <p className='pr-1'><i className="fas fa-eye" /> 10.4M</p>
-                                        <p><AiTwotoneHeart style={{color:"red",float:"right",fontSize:"20px"}}/></p>
-                                    </div>
-                                    <a href="viewprofile.html"> <img className="img-fluid" src="img/s4.png" alt /></a>
-                                    <p><a href="viewprofile.html"><strong>History</strong></a> <span title data-placement="top" data-toggle="tooltip" data-original-title="Verified"><i className="fas fa-check-circle text-success" /></span></p>
-                                    <p>3 Months ago</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div className="col-xl-3 col-sm-6 mb-3" style={{ paddingLeft: 10, paddingRight: 0 }}>
-                        <div className="video-card">
-                            <div className="video-card-image" style={{ borderRadius: 15 }}>
-                                <a className="play-icon" href="video-page.html"><i className="fas fa-play-circle" /></a>
-                                <a href="video-page.html"><img className="img-fluid" src="img/v2.png" alt /></a>
-                                <div className="time">3:50</div>
-                            </div>
-                            <div className="video-card-body">
-                                <div className="video-title">
-                                    <a href="video-page.html">Just For You Gregory
-                                        </a>
-                                </div>
-                                <div className="single-video-author box mb-3" style={{ paddingLeft: 0, paddingRight: 0 }}>
-                                    <div className="float-right">
-                                        <p className='pr-1'><i className="fas fa-eye" /> 10.4M</p>
-                                        <p><AiTwotoneHeart style={{color:"red",float:"right",fontSize:"20px"}}/></p>
-                                    </div>
-                                    <a href="viewprofile.html"> <img className="img-fluid" src="img/s4.png" alt /></a>
-                                    <p><a href="viewprofile.html"><strong>History</strong></a> <span title data-placement="top" data-toggle="tooltip" data-original-title="Verified"><i className="fas fa-check-circle text-success" /></span></p>
-                                    <p>3 Months ago</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div className="col-xl-3 col-sm-6 mb-3" style={{ paddingLeft: 10, paddingRight: 0 }}>
-                        <div className="video-card">
-                            <div className="video-card-image" style={{ borderRadius: 15 }}>
-                                <a className="play-icon" href="video-page.html"><i className="fas fa-play-circle" /></a>
-                                <a href="video-page.html"><img className="img-fluid" src="img/v2.png" alt /></a>
-                                <div className="time">3:50</div>
-                            </div>
-                            <div className="video-card-body">
-                                <div className="video-title">
-                                    <a href="video-page.html">Just For You Gregory
-                                        </a>
-                                </div>
-                                <div className="single-video-author box mb-3" style={{ paddingLeft: 0, paddingRight: 0 }}>
-                                    <div className="float-right">
-                                        <p className='pr-1'><i className="fas fa-eye" /> 10.4M</p>
-                                        <p><AiTwotoneHeart style={{color:"red",float:"right",fontSize:"20px"}}/></p>
-                                    </div>
-                                    <a href="viewprofile.html"> <img className="img-fluid" src="img/s4.png" alt /></a>
-                                    <p><a href="viewprofile.html"><strong>History</strong></a> <span title data-placement="top" data-toggle="tooltip" data-original-title="Verified"><i className="fas fa-check-circle text-success" /></span></p>
-                                    <p>3 Months ago</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div className="col-xl-3 col-sm-6 mb-3" style={{ paddingLeft: 10, paddingRight: 0 }}>
-                        <div className="video-card">
-                            <div className="video-card-image" style={{ borderRadius: 15 }}>
-                                <a className="play-icon" href="video-page.html"><i className="fas fa-play-circle" /></a>
-                                <a href="video-page.html"><img className="img-fluid" src="img/v2.png" alt /></a>
-                                <div className="time">3:50</div>
-                            </div>
-                            <div className="video-card-body">
-                                <div className="video-title">
-                                    <a href="video-page.html">Just For You Gregory
-                                        </a>
-                                </div>
-                                <div className="single-video-author box mb-3" style={{ paddingLeft: 0, paddingRight: 0 }}>
-                                    <div className="float-right">
-                                        <p className='pr-1'><i className="fas fa-eye" /> 10.4M</p>
-                                        <p><AiTwotoneHeart style={{color:"red",float:"right",fontSize:"20px"}}/></p>
-                                    </div>
-                                    <a href="viewprofile.html"> <img className="img-fluid" src="img/s4.png" alt /></a>
-                                    <p><a href="viewprofile.html"><strong>History</strong></a> <span title data-placement="top" data-toggle="tooltip" data-original-title="Verified"><i className="fas fa-check-circle text-success" /></span></p>
-                                    <p>3 Months ago</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div className="col-xl-3 col-sm-6 mb-3" style={{ paddingLeft: 10, paddingRight: 0 }}>
-                        <div className="video-card">
-                            <div className="video-card-image" style={{ borderRadius: 15 }}>
-                                <a className="play-icon" href="video-page.html"><i className="fas fa-play-circle" /></a>
-                                <a href="video-page.html"><img className="img-fluid" src="img/v2.png" alt /></a>
-                                <div className="time">3:50</div>
-                            </div>
-                            <div className="video-card-body">
-                                <div className="video-title">
-                                    <a href="video-page.html">Just For You Gregory
-                                        </a>
-                                </div>
-                                <div className="single-video-author box mb-3" style={{ paddingLeft: 0, paddingRight: 0 }}>
-                                    <div className="float-right">
-                                        <p className='pr-1'><i className="fas fa-eye" /> 10.4M</p>
-                                        <p><AiTwotoneHeart style={{color:"red",float:"right",fontSize:"20px"}}/></p>
-                                    </div>
-                                    <a href="viewprofile.html"> <img className="img-fluid" src="img/s4.png" alt /></a>
-                                    <p><a href="viewprofile.html"><strong>History</strong></a> <span title data-placement="top" data-toggle="tooltip" data-original-title="Verified"><i className="fas fa-check-circle text-success" /></span></p>
-                                    <p>3 Months ago</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div className="col-xl-3 col-sm-6 mb-3" style={{ paddingLeft: 10, paddingRight: 0 }}>
-                        <div className="video-card">
-                            <div className="video-card-image" style={{ borderRadius: 15 }}>
-                                <a className="play-icon" href="video-page.html"><i className="fas fa-play-circle" /></a>
-                                <a href="video-page.html"><img className="img-fluid" src="img/v2.png" alt /></a>
-                                <div className="time">3:50</div>
-                            </div>
-                            <div className="video-card-body">
-                                <div className="video-title">
-                                    <a href="video-page.html">Just For You Gregory
-                                        </a>
-                                </div>
-                                <div className="single-video-author box mb-3" style={{ paddingLeft: 0, paddingRight: 0 }}>
-                                    <div className="float-right">
-                                        <p className='pr-1'><i className="fas fa-eye" /> 10.4M</p>
-                                        <p><AiTwotoneHeart style={{color:"red",float:"right",fontSize:"20px"}}/></p>
-                                    </div>
-                                    <a href="viewprofile.html"> <img className="img-fluid" src="img/s4.png" alt /></a>
-                                    <p><a href="viewprofile.html"><strong>History</strong></a> <span title data-placement="top" data-toggle="tooltip" data-original-title="Verified"><i className="fas fa-check-circle text-success" /></span></p>
-                                    <p>3 Months ago</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div className="col-xl-3 col-sm-6 mb-3" style={{ paddingLeft: 10, paddingRight: 0 }}>
-                        <div className="video-card">
-                            <div className="video-card-image" style={{ borderRadius: 15 }}>
-                                <a className="play-icon" href="video-page.html"><i className="fas fa-play-circle" /></a>
-                                <a href="video-page.html"><img className="img-fluid" src="img/v2.png" alt /></a>
-                                <div className="time">3:50</div>
-                            </div>
-                            <div className="video-card-body">
-                                <div className="video-title">
-                                    <a href="video-page.html">Just For You Gregory
-                                        </a>
-                                </div>
-                                <div className="single-video-author box mb-3" style={{ paddingLeft: 0, paddingRight: 0 }}>
-                                    <div className="float-right">
-                                        <p className='pr-1'><i className="fas fa-eye" /> 10.4M</p>
-                                        <p><AiTwotoneHeart style={{color:"red",float:"right",fontSize:"20px"}}/></p>
-                                    </div>
-                                    <a href="viewprofile.html"> <img className="img-fluid" src="img/s4.png" alt /></a>
-                                    <p><a href="viewprofile.html"><strong>History</strong></a> <span title data-placement="top" data-toggle="tooltip" data-original-title="Verified"><i className="fas fa-check-circle text-success" /></span></p>
-                                    <p>3 Months ago</p>
-                                </div>
-                            </div>
-                        </div>
+                          ))
+                        ) : (
+                          <div className="col-md-12">No Data found.</div>
+                        )}
+                      </div>
                     </div>
 
+                    <div
+                      className="tab-pane fade"
+                      id="ex1-tabs-3"
+                      role="tabpanel"
+                      aria-labelledby="ex1-tab-3"
+                    >
+                      <div
+                        className="col-xl-3 col-sm-6 mb-3"
+                        style={{ paddingLeft: 10, paddingRight: 0 }}
+                      >
+                        <div className="video-card">
+                          <div
+                            className="video-card-image"
+                            style={{ borderRadius: 15 }}
+                          >
+                            <a className="play-icon" href="video-page.html">
+                              <i className="fas fa-play-circle" />
+                            </a>
+                            <a href="video-page.html">
+                              <img className="img-fluid" src="img/v1.png" alt />
+                            </a>
+                            <a href="video-page.html">
+                              <div
+                                className="time"
+                                style={{ bottom: 0, right: 0 }}
+                              >
+                                <h3
+                                  style={{
+                                    position: "relative",
+                                    top: 35,
+                                    left: 25,
+                                  }}
+                                >
+                                  10
+                                </h3>
+                                <svg
+                                  viewBox="0 0 24 24"
+                                  preserveAspectRatio="xMidYMid meet"
+                                  focusable="false"
+                                  className="style-scope yt-icon"
+                                  style={{
+                                    pointerEvents: "none",
+                                    display: "block",
+                                    width: 100,
+                                    height: 120,
+                                  }}
+                                >
+                                  <g className="style-scope yt-icon">
+                                    sddfdf
+                                    <path
+                                      d="M22,7H2v1h20V7z M13,12H2v-1h11V12z M13,16H2v-1h11V16z M15,19v-8l7,4L15,19z"
+                                      className="style-scope yt-icon"
+                                    />
+                                  </g>
+                                </svg>
+                              </div>
+                            </a>
+                          </div>
+                          <div className="video-card-body">
+                            <div className="video-title">
+                              <a href="video-page.html">
+                                There are many variations of passages of Lorem
+                              </a>
+                            </div>
+                            <div
+                              className="single-video-author box mb-3"
+                              style={{ paddingLeft: 0, paddingRight: 0 }}
+                            >
+                              <div className="float-right">
+                                <p>
+                                  <i className="fas fa-eye" /> 10.4M
+                                </p>
+                                <p>
+                                  <i className="fa fa-thumbs-up" /> 131K
+                                </p>
+                              </div>
+                              <a href="viewprofile.html">
+                                {" "}
+                                <img
+                                  className="img-fluid"
+                                  src="img/s4.png"
+                                  alt
+                                />
+                              </a>
+                              <p>
+                                <a href="viewprofile.html">
+                                  <strong>History</strong>
+                                </a>{" "}
+                                <span
+                                  title
+                                  data-placement="top"
+                                  data-toggle="tooltip"
+                                  data-original-title="Verified"
+                                >
+                                  <i className="fas fa-check-circle text-success" />
+                                </span>
+                              </p>
+                              <p>3 Months ago</p>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                 
                 </div>
-            </div>
-        </div>
-    </div>
-    <hr />
-</div>
+              </div>
+            </TabPanel>
+            <TabPanel>
+              <div id="content-wrapper">
+                <div className="container-fluid pb-0">
+                  <h4>My Liked Videos</h4>
+                  <div className="top-category section-padding mb-4">
+                    <div className="row">
+                    {liked && liked.length > 0 ? (
+                          liked.map((list) => (
+                            <div
+                              className="col-sm-4 mb-4"
+                              style={{
+                                borderRadius: "10px",
+                                width: "100%",
+                                marginLeft: "",
+                              }}
+                            >
+                              <button
+                                style={{ borderRadius: "15px" }}
+                                className="fas fa-times-circle btn "
+                                onClick={() =>
+                                  removelikevideo(list.video_id)
+                                }
+                              ></button>
+                              
+                              <div
+                                className="video-card"
+                                style={{ width: "100%", borderRadius: "10px" }}
+                              >
 
-</div>
+
+                                <div
+                                  className="video-card-image"
+                                  style={{
+                                    borderRadius: "10px",
+                                    width: "100%",
+                                    height: "160px",
+                                  }}
+                                >
+                                  <Link  onClick={() => {
+                                localStorage.setItem("videoiid", list.video_id);
+                                localStorage.setItem("useridd", list.user_id);
+                                localStorage.setItem(
+                                  "channelid",
+                                  list.channel_id
+                                );
+                                localStorage.setItem("categorytpee", list.video_data[0].category_type);
+                              }}
+                                    className="play-icon"
+                                    to="/video_page"
+                                  >
+                                    <i className="fas fa-play-circle" />
+                                  </Link>
+                                  <Link to="/video_page" onClick={() => {
+                                localStorage.setItem("videoiid", list.video_id);
+                                localStorage.setItem("useridd", list.user_id);
+                                localStorage.setItem(
+                                  "channelid",
+                                  list.channel_id
+                                );
+                                localStorage.setItem("categorytpee", list.video_data[0].category_type);
+                              }}>
+                                     <img
+                                      className="img-fluid"
+                                      src={
+                                        "http://16.16.91.234:3003/uploads/" +
+                                        list.channel_data[0].image[1].filename
+                                        }
+                                      alt
+                                    /> 
+                                  </Link>
+                                  {/* <div className="time">3:50</div> */}
+                                </div>
+                                <div className="video-card-body">
+                                  <div className="video-title">
+                                    <a href="video-page.html">
+                                      {list.channel_data.originalname} 
+                                    </a>
+                                  </div>
+                                  <div
+                                    className="single-video-author box mb-3"
+                                    style={{ paddingLeft: 0, paddingRight: 0 }}
+                                  >
+                                    
+                                    <Link onClick={() => {
+                localStorage.setItem("videoiid", list._id);
+                localStorage.setItem("useridd", list.user_id);
+                localStorage.setItem("channelid", list.channel_id);
+                localStorage.setItem("categorytpee", list.video_data[0].category_type);
+              }} to="/view_profile">
+                                      {" "}
+                                       <img
+                                        className="img-fluid"
+                                        src={
+                                          "http://16.16.91.234:3003/uploads/" +
+                                          list.channel_data[0].image[0].filename
+                                        }
+                                        alt
+                                      /> 
+                                    </Link>
+                                    <p>
+                                      <Link onClick={() => {
+                localStorage.setItem("videoiid", list._id);
+                localStorage.setItem("useridd", list.user_id);
+                localStorage.setItem("channelid", list.channel_id);
+                localStorage.setItem("categorytpee", list.video_data[0].category_type);
+              }} to="/view_profile">
+                                        <strong>
+                                          {list.channel_data[0].channel_name}
+                                        </strong>
+                                      </Link>{" "}
+                                      
+                                    </p>
+                                    <p>{formatDate(list.current_date)}</p>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          ))
+                        ) : (
+                          <div className="col-md-12">No Data found.</div>
+                        )}
+                    </div>
+                  </div>
+                  <hr />
+                </div>
+              </div>
             </TabPanel>
             <TabPanel>
               <div className="container-fluid">
                 <h4>History</h4>
                 <div className="video-block section-padding">
                   <div className="tab-content" id="ex1-content">
-                    <div className="tab-pane fade show active" id="ex1-tabs-1" role="tabpanel" aria-labelledby="ex1-tab-1">
+                    <div
+                      className="tab-pane fade show active"
+                      id="ex1-tabs-1"
+                      role="tabpanel"
+                      aria-labelledby="ex1-tab-1"
+                    >
                       <div className="row">
-
-
-                         
                       {getcommt && getcommt.length > 0 ? (
-                              getcommt.map((list) => (
+  getcommt.map((list) => (
+    <div
+      className="col-lg-6 col-sm-6 mb-3"
+      style={{ paddingLeft: 10, paddingRight: 0 }}
+      key={list._id} 
+    >
+      <div className="row m-0">
+        <div className="col-sm-4 video-card">
+          <div
+            className="mt-2 video-card-image"
+            style={{ height: "100px", borderRadius: 15 }}
+          >
+            <Link  onClick={() => {
+                                localStorage.setItem("videoiid", list.video_id);
+                                localStorage.setItem("useridd", list.user_id);
+                                localStorage.setItem(
+                                  "channelid",
+                                  list.channel_id
+                                  );
+                                localStorage.setItem("categorytpee",list.data && list.data[0]?.category_type
+                                );
+                              }} className="play-icon" to="/video_page">
+              <i className="fas fa-play-circle" />
+            </Link>
+            <Link to="/video_page">
+              {list.data && list.data[0]?.video && list.data[0].video[1]?.filename && (
+                <img
+                  className="img-fluid"
+                  src={`http://16.16.91.234:3003/uploads/${list.data[0].video[1].filename}`}
+                  alt=""
+                />
+              )}
+            </Link>
+          </div>
+        </div>
 
-                     
-                        <div className="col-lg-6 col-sm-6 mb-3" style={{ paddingLeft: 10, paddingRight: 0 }}>
-                            <div className='row m-0'>
+        <div
+          className="col-sm-8 video-card-body"
+          style={{ backgroundColor: "white" }}
+        >
+          <div className="video-title">
+            <a href="video-page.html">
+              {list.data && list.data[0]?.description}
 
-                          <div className="col-sm-4 video-card">
-                            <div className="mt-2 video-card-image" style={{height:'100px' ,borderRadius: 15 }}>
-                              <a className="play-icon" href="video-page.html"><i className="fas fa-play-circle" /></a>
-                              <a href="video-page.html"><img className="img-fluid" src={"http://16.16.91.234:3003/uploads/" + list.data[0].video[1].filename} alt /></a>
-                              <div className="time mr-3">3:50</div>
-                            </div>
 
-                            </div>
+            </a>
+          </div>
+          <div
+            className="single-video-author mb-3 pr-5 mr-3"
+            style={{ paddingLeft: 0, paddingRight: 0 }}
+          >
+            
+            <p>{list.data && list.data[0]?.video_views}  views</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  ))
+) : (
+  <div className="col-md-12">No Data found.</div>
+)}
 
-                            <div className="col-sm-8 video-card-body" style={{backgroundColor:"white"}}>
-                              <div className="video-title">
-                                <a href="video-page.html">{list.data[0].description}</a>
-                              </div>
-                              <div className="single-video-author mb-3 pr-5 mr-3" style={{ paddingLeft: 0, paddingRight: 0 }}>
-                                {/* <div className="float-right">
-                                  <p><i className="fas fa-eye" /> 10.4M</p>
-                                  <p><i className="fa fa-thumbs-up" /> 131K</p>
-                                </div> */}
-                                {/* <a href="viewprofile.html"> <img className="img-fluid" src="img/s4.png" alt /></a>
-                                <p><a href="viewprofile.html"><strong>History</strong></a> <span title data-placement="top" data-toggle="tooltip" data-original-title="Verified"><i className="fas fa-check-circle text-success" /></span></p>
-                                <p>3 Months ago</p> */}
-                                 <p>ML Record</p>
-                                  <p>{list.data[0].video_views} M views</p>
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                         ))
-                         ) : (
-                           <div className="col-md-12">No Data found.</div>
-                         )}
                       </div>
                     </div>
 
-
-
-                    <div className="tab-pane fade" id="ex1-tabs-3" role="tabpanel" aria-labelledby="ex1-tab-3">
-                      <div className="col-xl-3 col-sm-6 mb-3" style={{ paddingLeft: 10, paddingRight: 0 }}>
+                    <div
+                      className="tab-pane fade"
+                      id="ex1-tabs-3"
+                      role="tabpanel"
+                      aria-labelledby="ex1-tab-3"
+                    >
+                      <div
+                        className="col-xl-3 col-sm-6 mb-3"
+                        style={{ paddingLeft: 10, paddingRight: 0 }}
+                      >
                         <div className="video-card">
-                          <div className="video-card-image" style={{ borderRadius: 15 }}>
-                            <a className="play-icon" href="video-page.html"><i className="fas fa-play-circle" /></a>
-                            <a href="video-page.html"><img className="img-fluid" src="img/v1.png" alt /></a>
+                          <div
+                            className="video-card-image"
+                            style={{ borderRadius: 15 }}
+                          >
+                            <a className="play-icon" href="video-page.html">
+                              <i className="fas fa-play-circle" />
+                            </a>
                             <a href="video-page.html">
-                              <div className="time" style={{ bottom: 0, right: 0 }}>
-                                <h3 style={{ position: 'relative', top: 35, left: 25 }}>10</h3>
-                                <svg viewBox="0 0 24 24" preserveAspectRatio="xMidYMid meet" focusable="false" className="style-scope yt-icon" style={{ pointerEvents: 'none', display: 'block', width: 100, height: 120 }}><g className="style-scope yt-icon">sddfdf<path d="M22,7H2v1h20V7z M13,12H2v-1h11V12z M13,16H2v-1h11V16z M15,19v-8l7,4L15,19z" className="style-scope yt-icon" /></g></svg>
+                              <img className="img-fluid" src="img/v1.png" alt />
+                            </a>
+                            <a href="video-page.html">
+                              <div
+                                className="time"
+                                style={{ bottom: 0, right: 0 }}
+                              >
+                                <h3
+                                  style={{
+                                    position: "relative",
+                                    top: 35,
+                                    left: 25,
+                                  }}
+                                >
+                                  10
+                                </h3>
+                                <svg
+                                  viewBox="0 0 24 24"
+                                  preserveAspectRatio="xMidYMid meet"
+                                  focusable="false"
+                                  className="style-scope yt-icon"
+                                  style={{
+                                    pointerEvents: "none",
+                                    display: "block",
+                                    width: 100,
+                                    height: 120,
+                                  }}
+                                >
+                                  <g className="style-scope yt-icon">
+                                    sddfdf
+                                    <path
+                                      d="M22,7H2v1h20V7z M13,12H2v-1h11V12z M13,16H2v-1h11V16z M15,19v-8l7,4L15,19z"
+                                      className="style-scope yt-icon"
+                                    />
+                                  </g>
+                                </svg>
                               </div>
                             </a>
                           </div>
                           <div className="video-card-body">
                             <div className="video-title">
-                              <a href="video-page.html">There are many variations of passages of
-                                Lorem</a>
+                              <a href="video-page.html">
+                                There are many variations of passages of Lorem
+                              </a>
                             </div>
-                            <div className="single-video-author mb-3" style={{ paddingLeft: 0, paddingRight: 0 }}>
+                            <div
+                              className="single-video-author mb-3"
+                              style={{ paddingLeft: 0, paddingRight: 0 }}
+                            >
                               <div className="float-right">
-                                <p><i className="fas fa-eye" /> 10.4M</p>
-                                <p><i className="fa fa-thumbs-up" /> 131K</p>
+                                <p>
+                                  <i className="fas fa-eye" /> 10.4M
+                                </p>
+                                <p>
+                                  <i className="fa fa-thumbs-up" /> 131K
+                                </p>
                               </div>
-                              <a href="viewprofile.html"> <img className="img-fluid" src="img/s4.png" alt /></a>
-                              <p><a href="viewprofile.html"><strong>History</strong></a> <span title data-placement="top" data-toggle="tooltip" data-original-title="Verified"><i className="fas fa-check-circle text-success" /></span></p>
+                              <a href="viewprofile.html">
+                                {" "}
+                                <img
+                                  className="img-fluid"
+                                  src="img/s4.png"
+                                  alt
+                                />
+                              </a>
+                              <p>
+                                <a href="viewprofile.html">
+                                  <strong>History</strong>
+                                </a>{" "}
+                                <span
+                                  title
+                                  data-placement="top"
+                                  data-toggle="tooltip"
+                                  data-original-title="Verified"
+                                >
+                                  <i className="fas fa-check-circle text-success" />
+                                </span>
+                              </p>
                               <p>3 Months ago</p>
                             </div>
                           </div>
                         </div>
                       </div>
                     </div>
-
-
-
-
-
-
                   </div>
-                  <nav aria-label="Page navigation example">
-                    <ul className="pagination justify-content-center pagination-sm mb-0">
-                      <li className="page-item disabled">
-                        <a tabIndex={-1} href="#" className="page-link">Previous</a>
-                      </li>
-                      <li className="page-item active"><a href="#" className="page-link">1</a></li>
-                      <li className="page-item"><a href="#" className="page-link">2</a></li>
-                      <li className="page-item"><a href="#" className="page-link">3</a></li>
-                      <li className="page-item">
-                        <a href="#" className="page-link">Next</a>
-                      </li>
-                    </ul>
-                  </nav>
+                 
                 </div>
               </div>
             </TabPanel>
             <TabPanel>
               <div className="container-fluid">
-                <h4>My Subscribe Channel  </h4>
+                <h4>My Subscribe Channel </h4>
                 <div className="video-block section-padding">
                   <div className="tab-content" id="ex1-content">
-                    <div className="tab-pane fade show active" id="ex1-tabs-1" role="tabpanel" aria-labelledby="ex1-tab-1">
+                    <div
+                      className="tab-pane fade show active"
+                      id="ex1-tabs-1"
+                      role="tabpanel"
+                      aria-labelledby="ex1-tab-1"
+                    >
                       <div className="row">
-                      {listss.map((list) => {
-    
-    return (
-      <div className='col-sm-4 mb-4  ' style={{borderRadius:"10px" ,width:'100%', marginLeft:'' }} >
-        
-      <div className="video-card"  style={{  width:'100%' , borderRadius:'10px' }}>
-        <div className="video-card-image" style={{ borderRadius: '10px',width:'100%', height: '160px' }}>
-                              <a className="play-icon" href="video-page.html"><i className="fas fa-play-circle" /></a>
-                              <a href="video-page.html"><img style={{height:'300px'}} className="img-fluid" src={"http://16.16.91.234:3003/uploads/" + list.video_data[1].video[1].filename} alt /></a>
-                              <div className="time">3:50</div>
-                            </div>
-                            <div className="video-card-body">
-                              {/* <div className="video-title">
-                                <a href="video-page.html">{list.data[0].description}</a>
-                              </div> */}
-                              <div className="single-video-author box mb-3" style={{ paddingLeft: 0, paddingRight: 0 }}>
-                                {/* <div className="float-right">
-                                  <p><i className="fas fa-eye" /> 10.4M</p>
-                                  <p><i className="fa fa-thumbs-up" /> {list.data[0].video_likes}K</p>
-                                </div> */}
-                                <a href="viewprofile.html"> <img className="img-fluid" src={"http://16.16.91.234:3003/uploads/" + list.video_data[1].video[1].filename} alt /></a>
-                                <p><a href="viewprofile.html"><strong>{list.data[0].channel_name}</strong></a> <span title data-placement="top" data-toggle="tooltip" data-original-title="Verified"><i className="fas fa-check-circle text-success" /></span></p>
-                                <p>3 Months ago</p>
+                        {listss.length > 0 ? (
+                          listss.map((list, index) => (
+                            <div
+                              className="col-sm-4 mb-4"
+                              style={{
+                                borderRadius: "10px",
+                                width: "100%",
+                                marginLeft: "",
+                              }}
+                              key={index}
+                            >
+                              <div
+                                className="video-card"
+                                style={{ width: "100%", borderRadius: "10px" }}
+                              >
+                                <div
+                                  className="video-card-image"
+                                  style={{
+                                    borderRadius: "10px",
+                                    width: "100%",
+                                    height: "160px",
+                                  }}
+                                >
+                                  <Link  onClick={() => {
+                                localStorage.setItem("videoiid", list.video_data[1]._id);
+                                localStorage.setItem("useridd", list.user_id);
+                                localStorage.setItem(
+                                  "channelid",
+                                  list.channel_id
+                                );
+                              }} 
+                                    className="play-icon"
+                                    to="/video_page"
+                                  >
+                                    <i className="fas fa-play-circle" />
+                                  </Link>
+                                  {list.video_data &&
+                                  Array.isArray(list.video_data) &&
+                                  list.video_data.length > 1 &&
+                                  list.video_data[1].video &&
+                                  Array.isArray(list.video_data[1].video) &&
+                                  list.video_data[1].video.length > 1 &&
+                                  list.video_data[1].video[1].filename ? (
+                                    <Link to="/video_page"  onClick={() => {
+                                      localStorage.setItem("videoiid", list.video_data[1]._id);
+                                      localStorage.setItem("useridd", list.user_id);
+                                      localStorage.setItem(
+                                        "channelid",
+                                        list.channel_id
+                                      );
+                                    }}>
+                                      <img
+                                        style={{ height: "300px" }}
+                                        className="img-fluid"
+                                        src={
+                                          "http://16.16.91.234:3003/uploads/" +
+                                          list.video_data[1].video[1].filename
+                                        }
+                                        alt
+                                      />
+                                    </Link>
+                                  ) : (
+                                    <div>No video available</div>
+                                  )}
+                                
+                                </div>
+                                <div className="video-card-body">
+                                  <div
+                                    className="single-video-author box mb-3"
+                                    style={{ paddingLeft: 0, paddingRight: 0 }}
+                                  >
+                                    <Link onClick={() => {
+                localStorage.setItem("videoiid", list._id);
+                localStorage.setItem("useridd", list.user_id);
+                localStorage.setItem("channelid", list.channel_id);
+              }} to="/view_profile">
+                                      {" "}
+                                      <img
+                                        className="img-fluid"
+                                        src={
+                                          "http://16.16.91.234:3003/uploads/" +
+                                          (list.video_data &&
+                                          Array.isArray(list.video_data) &&
+                                          list.video_data.length > 1 &&
+                                          list.video_data[1].video &&
+                                          Array.isArray(
+                                            list.video_data[1].video
+                                          ) &&
+                                          list.video_data[1].video.length > 1 &&
+                                          list.video_data[1].video[1].filename
+                                            ? list.video_data[1].video[1]
+                                                .filename
+                                            : "")
+                                        }
+                                        alt
+                                      />
+                                    </Link>
+                                    <p>
+                                      <Link onClick={() => {
+                localStorage.setItem("videoiid", list._id);
+                localStorage.setItem("useridd", list.user_id);
+                localStorage.setItem("channelid", list.channel_id);
+              }} to="/view_profile">
+                                        <strong>
+                                          {list.data &&
+                                          Array.isArray(list.data) &&
+                                          list.data.length > 0 &&
+                                          list.data[0].channel_name
+                                            ? list.data[0].channel_name
+                                            : "Unknown Channel"}
+                                        </strong>
+                                      </Link>{" "}
+                                      
+                                    </p>
+                                    <p>{formatDate(list.current_date)}</p>
+                                  </div>
+                                </div>
                               </div>
                             </div>
-                          </div>
-                        </div>
-                      
-                      
-                      );
-  })}
+                          ))
+                        ) : (
+                          <div className="col-md-12">No data found.</div>
+                        )}
                       </div>
                     </div>
 
-
-
-                    <div className="tab-pane fade" id="ex1-tabs-3" role="tabpanel" aria-labelledby="ex1-tab-3">
-                      <div className="col-xl-3 col-sm-6 mb-3" style={{ paddingLeft: 10, paddingRight: 0 }}>
+                    <div
+                      className="tab-pane fade"
+                      id="ex1-tabs-3"
+                      role="tabpanel"
+                      aria-labelledby="ex1-tab-3"
+                    >
+                      <div
+                        className="col-xl-3 col-sm-6 mb-3"
+                        style={{ paddingLeft: 10, paddingRight: 0 }}
+                      >
                         <div className="video-card">
-                          <div className="video-card-image" style={{ borderRadius: 15 }}>
-                            <a className="play-icon" href="video-page.html"><i className="fas fa-play-circle" /></a>
-                            <a href="video-page.html"><img className="img-fluid" src="img/v1.png" alt /></a>
+                          <div
+                            className="video-card-image"
+                            style={{ borderRadius: 15 }}
+                          >
+                            <a className="play-icon" href="video-page.html">
+                              <i className="fas fa-play-circle" />
+                            </a>
                             <a href="video-page.html">
-                              <div className="time" style={{ bottom: 0, right: 0 }}>
-                                <h3 style={{ position: 'relative', top: 35, left: 25 }}>10</h3>
-                                <svg viewBox="0 0 24 24" preserveAspectRatio="xMidYMid meet" focusable="false" className="style-scope yt-icon" style={{ pointerEvents: 'none', display: 'block', width: 100, height: 120 }}><g className="style-scope yt-icon">sddfdf<path d="M22,7H2v1h20V7z M13,12H2v-1h11V12z M13,16H2v-1h11V16z M15,19v-8l7,4L15,19z" className="style-scope yt-icon" /></g></svg>
+                              <img className="img-fluid" src="img/v1.png" alt />
+                            </a>
+                            <a href="video-page.html">
+                              <div
+                                className="time"
+                                style={{ bottom: 0, right: 0 }}
+                              >
+                                <h3
+                                  style={{
+                                    position: "relative",
+                                    top: 35,
+                                    left: 25,
+                                  }}
+                                >
+                                  10
+                                </h3>
+                                <svg
+                                  viewBox="0 0 24 24"
+                                  preserveAspectRatio="xMidYMid meet"
+                                  focusable="false"
+                                  className="style-scope yt-icon"
+                                  style={{
+                                    pointerEvents: "none",
+                                    display: "block",
+                                    width: 100,
+                                    height: 120,
+                                  }}
+                                >
+                                  <g className="style-scope yt-icon">
+                                    sddfdf
+                                    <path
+                                      d="M22,7H2v1h20V7z M13,12H2v-1h11V12z M13,16H2v-1h11V16z M15,19v-8l7,4L15,19z"
+                                      className="style-scope yt-icon"
+                                    />
+                                  </g>
+                                </svg>
                               </div>
                             </a>
                           </div>
                           <div className="video-card-body">
                             <div className="video-title">
-                              <a href="video-page.html">There are many variations of passages of
-                                Lorem</a>
+                              <a href="video-page.html">
+                                There are many variations of passages of Lorem
+                              </a>
                             </div>
-                            <div className="single-video-author box mb-3" style={{ paddingLeft: 0, paddingRight: 0 }}>
+                            <div
+                              className="single-video-author box mb-3"
+                              style={{ paddingLeft: 0, paddingRight: 0 }}
+                            >
                               <div className="float-right">
-                                <p><i className="fas fa-eye" /> 10.4M</p>
-                                <p><i className="fa fa-thumbs-up" /> 131K</p>
+                                <p>
+                                  <i className="fas fa-eye" /> 10.4M
+                                </p>
+                                <p>
+                                  <i className="fa fa-thumbs-up" /> 131K
+                                </p>
                               </div>
-                              <a href="viewprofile.html"> <img className="img-fluid" src="img/s4.png" alt /></a>
-                              <p><a href="viewprofile.html"><strong>History</strong></a> <span title data-placement="top" data-toggle="tooltip" data-original-title="Verified"><i className="fas fa-check-circle text-success" /></span></p>
+                              <a href="viewprofile.html">
+                                {" "}
+                                <img
+                                  className="img-fluid"
+                                  src="img/s4.png"
+                                  alt
+                                />
+                              </a>
+                              <p>
+                                <a href="viewprofile.html">
+                                  <strong>History</strong>
+                                </a>{" "}
+                                <span
+                                  title
+                                  data-placement="top"
+                                  data-toggle="tooltip"
+                                  data-original-title="Verified"
+                                >
+                                  <i className="fas fa-check-circle text-success" />
+                                </span>
+                              </p>
                               <p>3 Months ago</p>
                             </div>
                           </div>
                         </div>
                       </div>
                     </div>
-
-
-
-
-
-
                   </div>
-                  <nav aria-label="Page navigation example">
-                    <ul className="pagination justify-content-center pagination-sm mb-0">
-                      <li className="page-item disabled">
-                        <a tabIndex={-1} href="#" className="page-link">Previous</a>
-                      </li>
-                      <li className="page-item active"><a href="#" className="page-link">1</a></li>
-                      <li className="page-item"><a href="#" className="page-link">2</a></li>
-                      <li className="page-item"><a href="#" className="page-link">3</a></li>
-                      <li className="page-item">
-                        <a href="#" className="page-link">Next</a>
-                      </li>
-                    </ul>
-                  </nav>
+                 
                 </div>
               </div>
             </TabPanel>
 
-            <TabPanel>
-            <div>
-                <div className="container-fluid">
-                  <div className="video-block section-padding">
-                    <div className="row">
-                      <div className="col-md-12">
-                        <div className="main-title">
-                          <div className="btn-group float-right right-action">
-                            <Link
-                              to="#"
-                              className="right-action-link text-gray"
-                              data-toggle="dropdown"
-                              aria-haspopup="true"
-                              aria-expanded="false"
-                            >
-                              Sort by <i className="fa fa-caret-down" aria-hidden="true" />
-                            </Link>
-                            <div className="dropdown-menu dropdown-menu-right">
-                              <Link className="dropdown-item" to="#">
-                                <i className="fas fa-fw fa-star" /> &nbsp; Top Rated
-                              </Link>
-                              <Link className="dropdown-item" to="#">
-                                <i className="fas fa-fw fa-signal" /> &nbsp; Viewed
-                              </Link>
-                              <Link className="dropdown-item" to="#">
-                                <i className="fas fa-fw fa-times-circle" />
-                                &nbsp; Close
-                              </Link>
-                            </div>
-                          </div>
-                          <h6>Upload Videos</h6>
-                        </div>
-                      </div>
-                      {getmyvideo.map((list) => {
-    if (list.video && list.video[1] && list.video[1].filename) {
-      return (
-        <div className="col-lg-4 col-sm-6 mb-4" key={list.video[1].filename} style={{ paddingLeft: 10, paddingRight: 0 }}>
-        <div className="video-card" style={{height: '300px'}}>
-          <div className="video-card-image" style={{ borderRadius: 15 , height:'212px' }}>
-              <Link className="play-icon" to="/video_page" onClick={() => {
-              localStorage.setItem("videoiid", list._id);
-              localStorage.setItem("useridd", list.user_id);
-              localStorage.setItem("channelid", list.channel_id);
-            }} >
-                <i className="fas fa-play-circle" />
-              </Link>
-              <Link to="/video_page" onClick={() => {
-              localStorage.setItem("videoiid", list._id);
-              localStorage.setItem("useridd", list.user_id);
-              localStorage.setItem("channelid", list.channel_id);
-            }} >
-                <img  
-                  className="img-fluid"
-                  src={"http://16.16.91.234:3003/uploads/" + list.video[1].filename}
-                  alt=""
-                />
-              </Link>
-              <div className="time">3:50</div>
-            </div>
-            <div className="video-card-body">
-              <div className="video-title">
-                <Link to="#">{list.video_name}</Link>
-              </div>
-              <div className="video-page text-success">
-              {list.channel_name}{" "}
-                <Link
-                  title=""
-                  data-placement="top"
-                  data-toggle="tooltip"
-                  to="#"
-                  data-original-title="Verified"
-                >
-                  <i className="fas fa-check-circle text-success" />
-                </Link>
-              </div>
-              <div className="video-view">
-                {list.video_views}M views &nbsp;
-                <i className="fas fa-calendar-alt" /> 11 Months ago
-              </div>
-            </div>
-          </div>
-        </div>
-      );
-    } else {
-      return null; // Skip rendering if video data is incomplete
-    }
-  })}
-                    </div>
-                    <nav aria-label="Page navigation example">
-                      <ul className="pagination justify-content-center pagination-sm mb-0">
-                        <li className="page-item disabled">
-                          <Link tabIndex={-1} to="#" className="page-link">
-                            Previous
-                          </Link>
-                        </li>
-                        <li className="page-item active">
-                          <Link to="#" className="page-link">
-                            1
-                          </Link>
-                        </li>
-                        <li className="page-item">
-                          <Link to="#" className="page-link">
-                            2
-                          </Link>
-                        </li>
-                        <li className="page-item">
-                          <Link to="#" className="page-link">
-                            3
-                          </Link>
-                        </li>
-                        <li className="page-item">
-                          <Link to="#" className="page-link">
-                            Next
-                          </Link>
-                        </li>
-                      </ul>
-                    </nav>
-                  </div>
-                </div>
-              </div>
-            </TabPanel>
-
+           
           </Tabs>
-
-
-
-        
-
-
-</div>
-
+        </div>
       </div>
       <Footer />
     </>
+  );
+};
 
-  )
-}
-
-export default Myprofile
+export default Myprofile;

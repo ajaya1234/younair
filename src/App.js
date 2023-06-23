@@ -37,6 +37,13 @@ import Uploadmusic from "./components/Uploadmusic";
 import Music from "./components/Music";
 import Audio from "./components/Audio";
 import Musiclist from "./components/Musiclist";
+import Help from "./components/Help";
+import Videoplaylist from "./components/Videoplaylist";
+import Watchlater from "./components/Watchlater";
+import Blockuser from "./components/Blockuser";
+
+import Appp from "./components/Appp";
+
 
 
 function App() {
@@ -78,6 +85,11 @@ function App() {
         <Route path="/music" element={<Music/>}></Route>
         <Route path="/audio" element={<Audio/>}></Route>
        <Route path="/musiclist" element={<Musiclist/>}></Route>
+       <Route path="/help" element={<Help/>}></Route>
+       <Route path="/videoplaylist" element={<Videoplaylist/>}></Route>
+       <Route path="/watchlater" element={<Watchlater/>}></Route>
+       <Route path="/blockuser" element={<Blockuser/>}></Route>
+       <Route path="/appp" element={<Appp/>}></Route>
         {/* <Route path="/" element={<Single_Router/>}></Route>
         <Route path="/singlechannels" element={<Single_channels/>}></Route>
         <Route path="/videos" element={<Single_videos/>}></Route>

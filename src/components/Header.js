@@ -148,7 +148,7 @@ function Header() {
                 className="dropdown-menu dropdown-menu-right"
                 aria-labelledby="alertsDropdown"
               >
-                <Link className="dropdown-item" to="#">
+                <Link className="dropdown-item" to="/appp">
                   <i className="fas fa-fw fa-edit " /> &nbsp; Go Live
                 </Link>
                 <Link className="dropdown-item" to="/upload_Video">
@@ -367,7 +367,7 @@ function Header() {
                 className="dropdown-menu dropdown-menu-right"
                 aria-labelledby="alertsDropdown"
               >
-                <Link className="dropdown-item" to="#">
+                <Link className="dropdown-item" to="/appp">
                   <i className="fas fa-fw fa-edit " /> &nbsp; Go Live
                 </Link>
                 <Link className="dropdown-item" to="/upload_Video">

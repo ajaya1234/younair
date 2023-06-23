@@ -2,10 +2,41 @@ import React from 'react'
 import Sidebar from './Sidebar'
 import Header from './Header'
 import Footer from './Footer'
-
 import '../setting.css'
+import axios from 'axios'
+import { useState } from 'react'
+import { useEffect } from 'react'
+
 
 const About = () => {
+
+    const [ gettop , setgettop] = useState([]);
+
+
+
+    useEffect(() => {
+        gettopvideo();
+      }, []);
+    
+      const gettopvideo = async () => {
+        const options = {
+          headers: {
+            "content-type": "application/json; charset=utf-8",
+            "Access-Control-Allow-Origin": '*'
+          }
+        }
+        const data = JSON.stringify({
+        });
+    
+        await axios.get("http://16.16.91.234:3003/api/about", data, options).then(res => {
+          setgettop(res.data.data);
+    
+        }).catch(err => {
+        })
+      }
+
+
+
     return (
         <>
             <Header />
@@ -17,72 +48,18 @@ const About = () => {
                             <div className="row">
                                 <div className="col-md-12">
                                     <div className="main-title">
-                                        <h6>Seven About</h6>
+                                        <h6> About</h6>
                                     </div>
-                                    <h6>17 Tips for Writing Effective YouTube Descriptions (Free Template Included)
+                                    {gettop.map((list) => {
+    
+    return (
+                                        <h6>
+                                            {list.about}
+                                        </h6>
+                                    
+                                    );
+  })}
 
-                                        Done right, YouTube descriptions can boost view counts and watch time. They can also help your videos rank in YouTube search.
-                                        Greg Sides, Alice Fleerackers <br/>
-
-
-                                        17 Tips for Writing Effective YouTube Descriptions (Free Template Included)
-
-                                        Done right, YouTube descriptions can boost view counts and watch time. They can also help your videos rank in YouTube search.
-                                        Greg Sides, Alice Fleerackers
-                                        17 Tips for Writing Effective YouTube Descriptions (Free Template Included)
-
-                                        Done right, YouTube descriptions can boost view counts and watch time. They can also help your videos rank in YouTube search.
-                                        Greg Sides, Alice Fleerackers
-                                        17 Tips for Writing Effective YouTube Descriptions (Free Template Included)<br/>
-
-                                        Done right, YouTube descriptions can boost view counts and watch time. They can also help your videos rank in YouTube search.
-                                        Greg Sides, Alice Fleerackers
-                                        17 Tips for Writing Effective YouTube Descriptions (Free Template Included)<br/>
-
-                                        Done right, YouTube descriptions can boost view counts and watch time. They can also help your videos rank in YouTube search.
-                                        Greg Sides, Alice Fleerackers
-                                        17 Tips for Writing Effective YouTube Descriptions (Free Template Included)<br/>
-
-                                        Done right, YouTube descriptions can boost view counts and watch time. They can also help your videos rank in YouTube search.
-                                        Greg Sides, Alice Fleerackers
-                                        17 Tips for Writing Effective YouTube Descriptions (Free Template Included)<br/>
-
-                                        Done right, YouTube descriptions can boost view counts and watch time. They can also help your videos rank in YouTube search.
-                                        Greg Sides, Alice Fleerackers17 Tips for Writing Effective YouTube Descriptions (Free Template Included)
-
-                                        Done right, YouTube descriptions can boost view counts and watch time. They can also help your videos rank in YouTube search.
-                                        Greg Sides, Alice Fleerackers
-                                        17 Tips for Writing Effective YouTube Descriptions (Free Template Included)<br/>
-
-                                        Done right, YouTube descriptions can boost view counts and watch time. They can also help your videos rank in YouTube search.
-                                        Greg Sides, Alice Fleerackers17 Tips for Writing Effective YouTube Descriptions (Free Template Included)
-
-                                        Done right, YouTube descriptions can boost view counts and watch time. They can also help your videos rank in YouTube search.
-                                        Greg Sides, Alice Fleerackers
-                                        17 Tips for Writing Effective YouTube Descriptions (Free Template Included) <br/>
-
-                                        Done right, YouTube descriptions can boost view counts and watch time. They can also help your videos rank in YouTube search.
-                                        Greg Sides, Alice Fleerackers
-                                        17 Tips for Writing Effective YouTube Descriptions (Free Template Included)<br/>
-
-                                        Done right, YouTube descriptions can boost view counts and watch time. They can also help your videos rank in YouTube search.
-                                        Greg Sides, Alice Fleerackers17 Tips for Writing Effective YouTube Descriptions (Free Template Included)
-
-                                        Done right, YouTube descriptions can boost view counts and watch time. They can also help your videos rank in YouTube search.
-                                        Greg Sides, Alice Fleerackers
-                                        17 Tips for Writing Effective YouTube Descriptions (Free Template Included)<br/>
-
-                                        Done right, YouTube descriptions can boost view counts and watch time. They can also help your videos rank in YouTube search.
-                                        Greg Sides, Alice Fleerackers17 Tips for Writing Effective YouTube Descriptions (Free Template Included)
-
-                                        Done right, YouTube descriptions can boost view counts and watch time. They can also help your videos rank in YouTube search.
-                                        Greg Sides, Alice Fleerackers
-                                        17 Tips for Writing Effective YouTube Descriptions (Free Template Included)<br/>
-
-                                        Done right, YouTube descriptions can boost view counts and watch time. They can also help your videos rank in YouTube search.
-                                        Greg Sides, Alice Fleerackers
-
-                                    </h6>
                                 </div>
 
 
@@ -96,7 +73,7 @@ const About = () => {
             </div>
 
 
-            <Footer />
+            {/* <Footer /> */}
         </>
     )
 }

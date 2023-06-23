@@ -16,6 +16,39 @@ const ViewProfile = () => {
   const [ getplaylist , setGetplaylist] = useState([])
   const [getmyaudio, setgetmyaudio] = useState([]);
 
+  const formatDate = (dateString) => {
+    const date = new Date(dateString);
+    const now = new Date();
+    
+    const timeDiff = Math.abs(now - date);
+    
+    const years = Math.floor(timeDiff / (1000 * 60 * 60 * 24 * 365));
+    if (years > 0) {
+      return years === 1 ? '1 year ago' : `${years} years ago`;
+    }
+    
+    const months = Math.floor(timeDiff / (1000 * 60 * 60 * 24 * 30));
+    if (months > 0) {
+      return months === 1 ? '1 month ago' : `${months} months ago`;
+    }
+    
+    const days = Math.floor(timeDiff / (1000 * 60 * 60 * 24));
+    if (days > 0) {
+      return days === 1 ? '1 day ago' : `${days} days ago`;
+    }
+    
+    const hours = Math.floor(timeDiff / (1000 * 60 * 60));
+    if (hours > 0) {
+      return hours === 1 ? '1 hour ago' : `${hours} hours ago`;
+    }
+    
+    const minutes = Math.floor(timeDiff / (1000 * 60));
+    if (minutes > 0) {
+      return minutes === 1 ? '1 minute ago' : `${minutes} minutes ago`;
+    }
+    
+    return 'Just now';
+  };
 
   
 
@@ -26,7 +59,7 @@ const ViewProfile = () => {
   const sendcomment = async () => {
     const channellidd = localStorage.getItem("channelid");
     
-console.log("single channeell",channellidd)
+
     
 
     const options = {
@@ -37,7 +70,7 @@ console.log("single channeell",channellidd)
     };
 
     const data = JSON.stringify({
-      "_id": channellidd,
+      _id: channellidd,
      
     });
 
@@ -116,8 +149,8 @@ console.log("single channeell",channellidd)
     const useriddd  = localStorage.getItem("useridd");
     const channellidd = localStorage.getItem("channelid");
     
-    console.log("singlesdasdasd channeell", channellidd);
-    console.log("singlesdasdasd userissss", useriddd);
+    // console.log("singlesdasdasd channeell", channellidd);
+    // console.log("singlesdasdasd userissss", useriddd);
   
     const options = {
       headers: {
@@ -226,9 +259,7 @@ console.log("single channeell",channellidd)
               <div className='col-sm-3'>
                 <Link className="channel-brand" to="#">
                 {list.channel_name}{" "}
-                  <span>
-                    <i className="fas fa-check-circle text-success" />
-                  </span><br />
+                  <br />
                  
                 </Link>
                 <button
@@ -328,6 +359,7 @@ console.log("single channeell",channellidd)
               localStorage.setItem("videoiid", list._id);
               localStorage.setItem("useridd", list.user_id);
               localStorage.setItem("channelid", list.channel_id);
+              localStorage.setItem("categorytpee",list.category_type);
             }} >
                 <i className="fas fa-play-circle" />
               </Link>
@@ -335,6 +367,9 @@ console.log("single channeell",channellidd)
               localStorage.setItem("videoiid", list._id);
               localStorage.setItem("useridd", list.user_id);
               localStorage.setItem("channelid", list.channel_id);
+              localStorage.setItem("categorytpee",list.category_type);
+
+            
             }} >
                 <img  
                   className="img-fluid"
@@ -342,7 +377,7 @@ console.log("single channeell",channellidd)
                   alt=""
                 />
               </Link>
-              <div className="time">3:50</div>
+
             </div>
             <div className="video-card-body">
               <div className="video-title">
@@ -357,12 +392,12 @@ console.log("single channeell",channellidd)
                   to="#"
                   data-original-title="Verified"
                 >
-                  <i className="fas fa-check-circle text-success" />
+                  
                 </Link>
               </div>
               <div className="video-view">
-                {list.video_views}M views &nbsp;
-                <i className="fas fa-calendar-alt" /> 11 Months ago
+                {list.video_views} views &nbsp;
+                <i className="fas fa-calendar-alt" /> {formatDate(list.current_date)}
               </div>
             </div>
           </div>
@@ -451,6 +486,7 @@ console.log("single channeell",channellidd)
               localStorage.setItem("videoiid", list._id);
               localStorage.setItem("useridd", list.user_id);
               localStorage.setItem("channelid", list.channel_id);
+              localStorage.setItem("categorytpee",list.category_type);
             }} >
                 <i className="fas fa-play-circle" />
               </Link>
@@ -458,6 +494,7 @@ console.log("single channeell",channellidd)
               localStorage.setItem("videoiid", list._id);
               localStorage.setItem("useridd", list.user_id);
               localStorage.setItem("channelid", list.channel_id);
+              localStorage.setItem("categorytpee",list.category_type);
             }} >
                 <img  
                   className="img-fluid"
@@ -465,7 +502,7 @@ console.log("single channeell",channellidd)
                   alt=""
                 />
               </Link>
-              <div className="time">3:50</div>
+
             </div>
             <div className="video-card-body">
               <div className="video-title">
@@ -480,12 +517,12 @@ console.log("single channeell",channellidd)
                   to="#"
                   data-original-title="Verified"
                 >
-                  <i className="fas fa-check-circle text-success" />
+
                 </Link>
               </div>
               <div className="video-view">
-                {list.video_views}M views &nbsp;
-                <i className="fas fa-calendar-alt" /> 11 Months ago
+                {list.video_views} views &nbsp;
+                <i className="fas fa-calendar-alt" /> {formatDate(list.current_date)}
               </div>
             </div>
           </div>
@@ -577,10 +614,10 @@ console.log("single channeell",channellidd)
                             <Link onClick={() => {
               localStorage.setItem("getsingleaudio", list._id); }} to="/musiclist">
                             <p>{list.name && list.name}</p>
-                              <div className="time" style={{ bottom: 0, right: 0 }}>
+                              {/* <div className="time" style={{ bottom: 0, right: 0 }}>
                                 <h3 style={{ position: 'relative', top: 35, left: 25 }}>10</h3>
                                 <svg viewBox="0 0 24 24" preserveAspectRatio="xMidYMid meet" focusable="false" className="style-scope yt-icon" style={{ pointerEvents: 'none', display: 'block', width: 100, height: 120 }}><g className="style-scope yt-icon">sddfdf<path d="M22,7H2v1h20V7z M13,12H2v-1h11V12z M13,16H2v-1h11V16z M15,19v-8l7,4L15,19z" className="style-scope yt-icon" /></g></svg>
-                              </div>
+                              </div> */}
                             </Link>
                           </div>
 
